@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neovim日記 - はてなブログ Neovim Theme Demo</title>
+  <link rel="stylesheet" href="hatena-blog-theme.css">
+  <style>
+    /* Demo only: background gradient (on real Hatena Blog, set via admin) */
+    html, body {
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== Hatena Blog DOM Structure (faithfully reproduced) ===== -->
+<div id="globalheader-container"></div>
+
+<div id="container">
+  <div id="container-inner">
+
+    <!-- Blog Title -->
+    <div id="blog-title">
+      <div id="blog-title-inner">
+        <div id="title"><a href="#">Neovim日記</a></div>
+        <div id="blog-title-content"></div>
+      </div>
+    </div>
+
+    <!-- Content area -->
+    <div id="content">
+      <div id="content-inner">
+
+        <!-- Hatena's default sidebar (hidden by CSS, absorbed by JS into #nv-files) -->
+        <aside id="box2">
+          <div id="box2-inner">
+            <div class="hatena-module hatena-module-recent-entries">
+              <div class="hatena-module-title"><a href="#">最新記事</a></div>
+              <div class="hatena-module-body">
+                <ul class="recent-entries hatena-urllist">
+                  <li class="urllist-item recent-entries-item"><div class="urllist-item-inner"><a href="#entry1" class="urllist-title-link recent-entries-title-link">Neovimのプラグイン管理をlazy.nvimに移行した</a></div></li>
+                  <li class="urllist-item recent-entries-item"><div class="urllist-item-inner"><a href="#entry2" class="urllist-title-link recent-entries-title-link">Treesitterでシンタックスハイライトを強化する</a></div></li>
+                  <li class="urllist-item recent-entries-item"><div class="urllist-item-inner"><a href="#entry3" class="urllist-title-link recent-entries-title-link">LSPの設定をnvim-lspconfigで一元管理する</a></div></li>
+                  <li class="urllist-item recent-entries-item"><div class="urllist-item-inner"><a href="#" class="urllist-title-link recent-entries-title-link">oil.nvimでファイル操作を快適にする</a></div></li>
+                  <li class="urllist-item recent-entries-item"><div class="urllist-item-inner"><a href="#" class="urllist-title-link recent-entries-title-link">which-keyで迷わないキーバインド</a></div></li>
+                </ul>
+              </div>
+            </div>
+            <div class="hatena-module hatena-module-archive" data-archive-type="default">
+              <div class="hatena-module-title"><a href="#">月別アーカイブ</a></div>
+              <div class="hatena-module-body">
+                <ul class="hatena-urllist">
+                  <li class="archive-module-year" data-year="2026">
+                    <a href="#" class="archive-module-year-title">2026</a>
+                    <ul class="archive-module-months">
+                      <li class="archive-module-month"><a href="#" class="archive-module-month-title">2026 / 3</a></li>
+                      <li class="archive-module-month"><a href="#" class="archive-module-month-title">2026 / 2</a></li>
+                      <li class="archive-module-month"><a href="#" class="archive-module-month-title">2026 / 1</a></li>
+                    </ul>
+                  </li>
+                  <li class="archive-module-year" data-year="2025">
+                    <a href="#" class="archive-module-year-title">2025</a>
+                    <ul class="archive-module-months">
+                      <li class="archive-module-month"><a href="#" class="archive-module-month-title">2025 / 12</a></li>
+                      <li class="archive-module-month"><a href="#" class="archive-module-month-title">2025 / 11</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Hatena's wrapper around main -->
+        <div id="wrapper">
+        <div id="main">
+          <div id="main-inner">
+
+            <!-- Entry 1 -->
+            <div class="entry" id="entry1">
+              <div class="entry-header">
+                <div class="date"><a href="#">2026-03-14</a></div>
+                <h1 class="entry-title">
+                  <a href="#entry1">Neovimのプラグイン管理をlazy.nvimに移行した</a>
+                </h1>
+                <div class="categories">
+                  <a href="#">Neovim</a>
+                  <a href="#">プラグイン</a>
+                  <a href="#">Lua</a>
+                </div>
+              </div>
+              <div class="entry-content">
+                <h2>経緯</h2>
+                <p>これまで<code>packer.nvim</code>を使っていたが、アーカイブされたので<a href="#" class="keyword">lazy.nvim</a>に移行することにした。移行作業自体は1時間程度で完了。</p>
+                <blockquote>
+                  <p>lazy.nvim は起動時間の最適化に優れており、遅延読み込みがデフォルトで有効になっている。</p>
+                </blockquote>
+                <h2>設定例</h2>
+                <p><code>~/.config/nvim/lua/plugins/</code> ディレクトリにプラグインごとのファイルを配置する構成にした。</p>
+<pre><code>-- lua/plugins/telescope.lua
+return {
+  "nvim-telescope/telescope.nvim",
+  tag = "0.1.8",
+  dependencies = {
+    "nvim-lua/plenary.nvim"
+  },
+  keys = {
+    { "&lt;leader&gt;ff", "&lt;cmd&gt;Telescope find_files&lt;cr&gt;" },
+    { "&lt;leader&gt;fg", "&lt;cmd&gt;Telescope live_grep&lt;cr&gt;" },
+  },
+}</code></pre>
+                <h2>移行で気をつけたこと</h2>
+                <h3>キーマッピングの遅延読み込み</h3>
+                <p><code>keys</code>テーブルを定義しておくと、そのキーが押されるまでプラグインが読み込まれない。起動時間が<strong>120ms → 45ms</strong>に改善した。</p>
+                <h3>依存関係の明示</h3>
+                <p><code>dependencies</code>を正しく設定しないと、プラグインの読み込み順序で問題が起きることがある。</p>
+                <table>
+                  <thead><tr><th>項目</th><th>packer.nvim</th><th>lazy.nvim</th></tr></thead>
+                  <tbody>
+                    <tr><td>起動時間</td><td>120ms</td><td>45ms</td></tr>
+                    <tr><td>遅延読み込み</td><td>手動設定</td><td>デフォルト</td></tr>
+                    <tr><td>UI</td><td>なし</td><td>組み込み</td></tr>
+                    <tr><td>ロックファイル</td><td>なし</td><td>あり</td></tr>
+                  </tbody>
+                </table>
+                <hr>
+                <p>全体的に非常に満足。packerから移行を迷っている人には強くおすすめしたい。</p>
+              </div>
+              <div class="entry-footer">
+                <div class="entry-footer-section"><a href="#">コメント(2)</a></div>
+              </div>
+            </div>
+
+            <!-- Entry 2 -->
+            <div class="entry" id="entry2">
+              <div class="entry-header">
+                <div class="date"><a href="#">2026-03-10</a></div>
+                <h1 class="entry-title">
+                  <a href="#entry2">Treesitterでシンタックスハイライトを強化する</a>
+                </h1>
+                <div class="categories"><a href="#">Neovim</a><a href="#">Treesitter</a></div>
+              </div>
+              <div class="entry-content">
+                <h2>nvim-treesitterとは</h2>
+                <p><a href="#" class="keyword">Treesitter</a>はインクリメンタルなパーサーで、正規表現ベースのハイライトより遥かに正確なシンタックスハイライトを提供する。</p>
+                <ul>
+                  <li>構文木ベースのハイライト</li>
+                  <li>インデントの改善</li>
+                  <li>テキストオブジェクトの拡張</li>
+                  <li>コードフォールディング</li>
+                </ul>
+                <h3>インストール</h3>
+<pre><code>return {
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      ensure_installed = {
+        "lua", "vim", "vimdoc",
+        "javascript", "typescript",
+        "rust", "go", "python",
+      },
+      highlight = { enable = true },
+      indent = { enable = true },
+    })
+  end,
+}</code></pre>
+                <blockquote><p>特にRustとTypeScriptのハイライトが劇的に改善された。型情報やライフタイムの色分けが正確になった。</p></blockquote>
+                <h2>パフォーマンス</h2>
+                <ol>
+                  <li>大きなファイル（1万行以上）でも高速</li>
+                  <li>正規表現ベースより安定</li>
+                  <li>言語ごとのパーサーが独立しているため、追加も簡単</li>
+                </ol>
+                <p>正規表現ベースの<code>syntax on</code>から移行して、もう戻れなくなった。</p>
+              </div>
+              <div class="entry-footer">
+                <div class="entry-footer-section"><a href="#">コメント(0)</a></div>
+              </div>
+            </div>
+
+            <!-- Entry 3 -->
+            <div class="entry" id="entry3">
+              <div class="entry-header">
+                <div class="date"><a href="#">2026-03-05</a></div>
+                <h1 class="entry-title">
+                  <a href="#entry3">LSPの設定をnvim-lspconfigで一元管理する</a>
+                </h1>
+                <div class="categories"><a href="#">Neovim</a><a href="#">LSP</a></div>
+              </div>
+              <div class="entry-content">
+                <h2>なぜLSP？</h2>
+                <p><a href="#" class="keyword">Language Server Protocol</a>を使うことで、エディタに依存しないコード補完・定義ジャンプ・リファクタリングが可能になる。</p>
+                <h3>基本設定</h3>
+<pre><code>local lspconfig = require("lspconfig")
+
+-- Rust
+lspconfig.rust_analyzer.setup({
+  settings = {
+    ["rust-analyzer"] = {
+      checkOnSave = { command = "clippy" },
+    },
+  },
+})
+
+-- TypeScript
+lspconfig.ts_ls.setup({})
+
+-- Lua
+lspconfig.lua_ls.setup({
+  settings = {
+    Lua = {
+      diagnostics = { globals = { "vim" } },
+    },
+  },
+})</code></pre>
+                <h3>キーマップ</h3>
+                <table>
+                  <thead><tr><th>キー</th><th>動作</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>gd</code></td><td>定義にジャンプ</td></tr>
+                    <tr><td><code>K</code></td><td>ホバー情報表示</td></tr>
+                    <tr><td><code>&lt;leader&gt;rn</code></td><td>リネーム</td></tr>
+                    <tr><td><code>&lt;leader&gt;ca</code></td><td>コードアクション</td></tr>
+                    <tr><td><code>gr</code></td><td>参照一覧</td></tr>
+                  </tbody>
+                </table>
+                <p>IDEと遜色ないレベルの開発環境がターミナル内で実現できる。</p>
+              </div>
+              <div class="entry-footer">
+                <div class="entry-footer-section"><a href="#">コメント(5)</a></div>
+              </div>
+            </div>
+
+            <!-- Pager -->
+            <div class="pager">
+              <a href="#">&lt; 前のページ</a>
+              <a href="#">次のページ &gt;</a>
+            </div>
+
+          </div>
+        </div>
+        </div><!-- #wrapper -->
+
+      </div>
+    </div>
+
+    <!-- Footer (hidden by CSS, replaced by prompt bar) -->
+    <div id="footer">
+      <div id="footer-inner"><p>Powered by Hatena Blog</p></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="hatena-blog-neovim.js"></script>
+
+</body>
+</html>
