@@ -223,6 +223,54 @@ a:visited { color: var(--blue); }
   left: 18px;
 }
 
+/* --- 386 toggle switch --- */
+#nv-386-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--tab-inactive);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  height: 100%;
+  box-shadow: calc(-1 * var(--border-width)) 0px 0px 0px var(--border-color) inset;
+  gap: 6px;
+}
+#nv-386-toggle:hover {
+  color: var(--font-color);
+  background-color: var(--selection);
+}
+#nv-386-toggle-track {
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--tab-inactive);
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+#nv-386-toggle-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--font-color);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+.nv-386 #nv-386-toggle-track {
+  background: #00aa00;
+}
+.nv-386 #nv-386-toggle-thumb {
+  left: 18px;
+}
+.nv-386 #nv-386-label {
+  color: #00ff00;
+}
+
 #nv-title-bar a {
   font-size: 16px;
   color: var(--font-color);
@@ -880,4 +928,54 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
 }
 .nv-mobile #nv-swipe-dots .nv-dot.nv-active {
   background: var(--blue);
+}
+
+/* ============================================
+   386 mode — protect Neovim layout from Bootstrap overrides
+   ============================================ */
+.nv-386 #container-inner {
+  position: fixed !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 2px solid #00aa00 !important;
+}
+.nv-386 #nv-topbar {
+  position: fixed !important;
+  border-radius: 0 !important;
+}
+.nv-386 .nv-prompt {
+  position: fixed !important;
+  border-radius: 0 !important;
+}
+.nv-386 #content {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+.nv-386 #content-inner {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+.nv-386 #wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  float: none !important;
+}
+.nv-386 #main {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  float: none !important;
+}
+.nv-386 #main-inner {
+  overflow-y: auto !important;
+  flex: 1 !important;
 }

@@ -230,6 +230,21 @@
       }
     });
     titleDiv.appendChild(toggle);
+
+    // 386 toggle (retro DOS mode)
+    var toggle386 = document.createElement('div');
+    toggle386.id = 'nv-386-toggle';
+    var is386 = NvCookie.get('nv_386') === 'on';
+    toggle386.innerHTML =
+      '<span id="nv-386-label">386</span>' +
+      '<div id="nv-386-toggle-track"><div id="nv-386-toggle-thumb"></div></div>';
+    toggle386.addEventListener('click', function () {
+      var active = document.documentElement.classList.toggle('nv-386');
+      NvCookie.set('nv_386', active ? 'on' : 'off');
+      apply386(active);
+    });
+    titleDiv.appendChild(toggle386);
+
     topbar.appendChild(titleDiv);
 
     var tabBar = document.createElement('div');
@@ -793,6 +808,26 @@
     lastContent.appendChild(cursorBlock);
   }
 
+  // ─── 386 mode ───
+  var BOOTSTRA_386_URL = 'https://cdn.jsdelivr.net/gh/kristopolous/BOOTSTRA.386@master/v5.3.1/dist/css/bootstrap.min.css';
+
+  function apply386(active) {
+    var linkEl = document.getElementById('nv-386-css');
+    if (active) {
+      if (!linkEl) {
+        linkEl = document.createElement('link');
+        linkEl.id = 'nv-386-css';
+        linkEl.rel = 'stylesheet';
+        linkEl.href = BOOTSTRA_386_URL;
+        document.head.appendChild(linkEl);
+      }
+      document.documentElement.classList.add('nv-386');
+    } else {
+      if (linkEl) linkEl.remove();
+      document.documentElement.classList.remove('nv-386');
+    }
+  }
+
   // ─── Init ───
   function init() {
     // Apply theme: cookie > system preference > dark default
@@ -816,6 +851,11 @@
     var isNarrowScreen = (screen.width <= 768 || screen.height <= 768);
     if (isTouchDevice && isNarrowScreen) {
       document.documentElement.classList.add('nv-mobile');
+    }
+
+    // Apply 386 mode from cookie
+    if (NvCookie.get('nv_386') === 'on') {
+      apply386(true);
     }
 
     // Build UI

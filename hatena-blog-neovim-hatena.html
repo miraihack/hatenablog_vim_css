@@ -224,6 +224,54 @@ a:visited { color: var(--blue); }
   left: 18px;
 }
 
+/* --- 386 toggle switch --- */
+#nv-386-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--tab-inactive);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  height: 100%;
+  box-shadow: calc(-1 * var(--border-width)) 0px 0px 0px var(--border-color) inset;
+  gap: 6px;
+}
+#nv-386-toggle:hover {
+  color: var(--font-color);
+  background-color: var(--selection);
+}
+#nv-386-toggle-track {
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--tab-inactive);
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+#nv-386-toggle-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--font-color);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+.nv-386 #nv-386-toggle-track {
+  background: #00aa00;
+}
+.nv-386 #nv-386-toggle-thumb {
+  left: 18px;
+}
+.nv-386 #nv-386-label {
+  color: #00ff00;
+}
+
 #nv-title-bar a {
   font-size: 16px;
   color: var(--font-color);
@@ -882,6 +930,56 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
 .nv-mobile #nv-swipe-dots .nv-dot.nv-active {
   background: var(--blue);
 }
+
+/* ============================================
+   386 mode — protect Neovim layout from Bootstrap overrides
+   ============================================ */
+.nv-386 #container-inner {
+  position: fixed !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 2px solid #00aa00 !important;
+}
+.nv-386 #nv-topbar {
+  position: fixed !important;
+  border-radius: 0 !important;
+}
+.nv-386 .nv-prompt {
+  position: fixed !important;
+  border-radius: 0 !important;
+}
+.nv-386 #content {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+.nv-386 #content-inner {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+.nv-386 #wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  float: none !important;
+}
+.nv-386 #main {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  float: none !important;
+}
+.nv-386 #main-inner {
+  overflow-y: auto !important;
+  flex: 1 !important;
+}
 </style>
 <script>
 /* ============================================
@@ -1116,6 +1214,21 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
       }
     });
     titleDiv.appendChild(toggle);
+
+    // 386 toggle (retro DOS mode)
+    var toggle386 = document.createElement('div');
+    toggle386.id = 'nv-386-toggle';
+    var is386 = NvCookie.get('nv_386') === 'on';
+    toggle386.innerHTML =
+      '<span id="nv-386-label">386</span>' +
+      '<div id="nv-386-toggle-track"><div id="nv-386-toggle-thumb"></div></div>';
+    toggle386.addEventListener('click', function () {
+      var active = document.documentElement.classList.toggle('nv-386');
+      NvCookie.set('nv_386', active ? 'on' : 'off');
+      apply386(active);
+    });
+    titleDiv.appendChild(toggle386);
+
     topbar.appendChild(titleDiv);
 
     var tabBar = document.createElement('div');
@@ -1679,6 +1792,26 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
     lastContent.appendChild(cursorBlock);
   }
 
+  // ─── 386 mode ───
+  var BOOTSTRA_386_URL = 'https://cdn.jsdelivr.net/gh/kristopolous/BOOTSTRA.386@master/v5.3.1/dist/css/bootstrap.min.css';
+
+  function apply386(active) {
+    var linkEl = document.getElementById('nv-386-css');
+    if (active) {
+      if (!linkEl) {
+        linkEl = document.createElement('link');
+        linkEl.id = 'nv-386-css';
+        linkEl.rel = 'stylesheet';
+        linkEl.href = BOOTSTRA_386_URL;
+        document.head.appendChild(linkEl);
+      }
+      document.documentElement.classList.add('nv-386');
+    } else {
+      if (linkEl) linkEl.remove();
+      document.documentElement.classList.remove('nv-386');
+    }
+  }
+
   // ─── Init ───
   function init() {
     // Apply theme: cookie > system preference > dark default
@@ -1702,6 +1835,11 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
     var isNarrowScreen = (screen.width <= 768 || screen.height <= 768);
     if (isTouchDevice && isNarrowScreen) {
       document.documentElement.classList.add('nv-mobile');
+    }
+
+    // Apply 386 mode from cookie
+    if (NvCookie.get('nv_386') === 'on') {
+      apply386(true);
     }
 
     // Build UI
