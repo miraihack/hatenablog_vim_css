@@ -932,53 +932,88 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
 }
 
 /* ============================================
-   386 mode — protect Neovim layout from Bootstrap overrides
+   386 mode — retro DOS style (pure CSS, no external deps)
    ============================================ */
+@font-face {
+  font-family: 'DOS';
+  src: url('https://cdn.jsdelivr.net/gh/kristopolous/BOOTSTRA.386@master/assets/fonts/Px437_IBM_EGA8.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+.nv-386 {
+  --bg-color: #0000aa !important;
+  --bg-solid: #0000aa !important;
+  --font-color: #ffffff !important;
+  --blue: #5555ff !important;
+  --yellow: #ffff55 !important;
+  --green: #00aa00 !important;
+  --purple: #ff55ff !important;
+  --lavender: #55ffff !important;
+  --selection: rgba(255, 255, 85, 0.3) !important;
+  --border-color: #00aa00 !important;
+  --tab-inactive: rgba(255, 255, 255, 0.5) !important;
+  --code-bg: rgba(0, 170, 0, 0.2) !important;
+  --blockquote-border: rgba(0, 170, 0, 0.4) !important;
+  --table-border: rgba(0, 170, 0, 0.4) !important;
+  --table-header-bg: rgba(0, 170, 0, 0.2) !important;
+  --hr-color: rgba(0, 170, 0, 0.5) !important;
+  --keyword-dot: rgba(0, 170, 0, 0.4) !important;
+}
+.nv-386,
+.nv-386 body {
+  background-color: #000080 !important;
+}
 .nv-386 #container-inner {
-  position: fixed !important;
-  display: flex !important;
-  flex-direction: column !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   border: 2px solid #00aa00 !important;
+  background-color: #0000aa !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 .nv-386 #nv-topbar {
-  position: fixed !important;
   border-radius: 0 !important;
+  background-color: #0000aa !important;
+  border-bottom: 1px solid #00aa00 !important;
 }
 .nv-386 .nv-prompt {
-  position: fixed !important;
+  border-radius: 0 !important;
+  background-color: #0000aa !important;
+  border-top: 1px solid #00aa00 !important;
+}
+.nv-386 * {
+  font-family: 'DOS', 'Px437_IBM_EGA8', Monaco, Menlo, Consolas, 'Courier New', monospace !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+  font-variant-ligatures: none !important;
+}
+.nv-386 .entry-content pre {
+  border: 1px solid #00aa00 !important;
+  background-color: #000080 !important;
+}
+.nv-386 .entry-content blockquote {
+  border: 1px solid #00aa00 !important;
+  border-left: 3px solid #00aa00 !important;
+  background-color: #000080 !important;
   border-radius: 0 !important;
 }
-.nv-386 #content {
-  display: flex !important;
-  flex: 1 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
+.nv-386 .nv-mode-badge {
+  border-radius: 0 !important;
 }
-.nv-386 #content-inner {
-  display: flex !important;
-  flex: 1 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
+.nv-386 .nv-share-btn {
+  border-radius: 0 !important;
 }
-.nv-386 #wrapper {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 !important;
-  overflow: hidden !important;
-  float: none !important;
+.nv-386 ::selection {
+  background-color: #ffff55 !important;
+  color: #0000aa !important;
 }
-.nv-386 #main {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 !important;
-  overflow: hidden !important;
-  float: none !important;
+.nv-386 ::-webkit-scrollbar-thumb {
+  background: #00aa00 !important;
+  border-radius: 0 !important;
 }
-.nv-386 #main-inner {
-  overflow-y: auto !important;
-  flex: 1 !important;
+.nv-386 ::-webkit-scrollbar-track {
+  background: #000080 !important;
 }
 </style>
 <script>
@@ -1793,39 +1828,12 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   }
 
   // ─── 386 mode ───
-  var BOOTSTRA_386_URL = 'https://cdn.jsdelivr.net/gh/kristopolous/BOOTSTRA.386@master/v5.3.1/dist/css/bootstrap.min.css';
-  var _386CssCache = null;
-
   function apply386(active) {
     if (active) {
       document.documentElement.classList.add('nv-386');
-      var existing = document.getElementById('nv-386-css');
-      if (existing) return;
-      if (_386CssCache) {
-        inject386Style(_386CssCache);
-      } else {
-        fetch(BOOTSTRA_386_URL)
-          .then(function (r) { return r.text(); })
-          .then(function (css) {
-            _386CssCache = css;
-            inject386Style(css);
-          })
-          .catch(function () {});
-      }
     } else {
-      var el = document.getElementById('nv-386-css');
-      if (el) el.remove();
       document.documentElement.classList.remove('nv-386');
     }
-  }
-
-  function inject386Style(css) {
-    var el = document.getElementById('nv-386-css');
-    if (el) return;
-    var style = document.createElement('style');
-    style.id = 'nv-386-css';
-    style.textContent = css;
-    document.head.appendChild(style);
   }
 
   // ─── Init ───
