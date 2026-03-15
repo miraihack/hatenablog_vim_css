@@ -205,7 +205,7 @@
     if (titleLink) {
       var a = document.createElement('a');
       a.href = titleLink.href;
-      a.textContent = titleLink.textContent;
+      a.textContent = 'TOP';
       titleDiv.appendChild(a);
     }
     // Theme toggle (switch + label, sits right next to title)
@@ -213,7 +213,7 @@
     toggle.id = 'nv-theme-toggle';
     var isDark = !document.documentElement.classList.contains('nv-light');
     toggle.innerHTML =
-      '<span id="nv-theme-label">' + (isDark ? 'ダークモード' : 'ライトモード') + '</span>' +
+      '<span id="nv-theme-label">' + (isDark ? 'ダーク' : 'ライト') + '</span>' +
       '<div id="nv-theme-toggle-track"><div id="nv-theme-toggle-thumb"></div></div>';
     toggle.addEventListener('click', function () {
       var html = document.documentElement;
@@ -221,12 +221,12 @@
         html.classList.remove('nv-light');
         html.classList.add('nv-dark');
         NvCookie.set('nv_theme', 'dark');
-        document.getElementById('nv-theme-label').textContent = 'ダークモード';
+        document.getElementById('nv-theme-label').textContent = 'ダーク';
       } else {
         html.classList.remove('nv-dark');
         html.classList.add('nv-light');
         NvCookie.set('nv_theme', 'light');
-        document.getElementById('nv-theme-label').textContent = 'ライトモード';
+        document.getElementById('nv-theme-label').textContent = 'ライト';
       }
     });
     titleDiv.appendChild(toggle);
