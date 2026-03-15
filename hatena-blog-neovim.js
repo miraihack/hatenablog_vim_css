@@ -242,8 +242,31 @@
       var active = document.documentElement.classList.toggle('nv-386');
       NvCookie.set('nv_386', active ? 'on' : 'off');
       apply386(active);
+      // 386 and nobunaga are mutually exclusive
+      if (active) {
+        document.documentElement.classList.remove('nv-nb');
+        NvCookie.set('nv_nb', 'off');
+      }
     });
     titleDiv.appendChild(toggle386);
+
+    // Nobunaga toggle (feudal Japan mode)
+    var toggleNb = document.createElement('div');
+    toggleNb.id = 'nv-nb-toggle';
+    toggleNb.innerHTML =
+      '<span id="nv-nb-label">\u4FE1\u9577</span>' +
+      '<div id="nv-nb-toggle-track"><div id="nv-nb-toggle-thumb"></div></div>';
+    toggleNb.addEventListener('click', function () {
+      var active = document.documentElement.classList.toggle('nv-nb');
+      NvCookie.set('nv_nb', active ? 'on' : 'off');
+      // 386 and nobunaga are mutually exclusive
+      if (active) {
+        document.documentElement.classList.remove('nv-386');
+        NvCookie.set('nv_386', 'off');
+        apply386(false);
+      }
+    });
+    titleDiv.appendChild(toggleNb);
 
     topbar.appendChild(titleDiv);
 
@@ -860,9 +883,12 @@
       document.documentElement.classList.add('nv-mobile');
     }
 
-    // Apply 386 mode from cookie
+    // Apply 386 / nobunaga mode from cookie
     if (NvCookie.get('nv_386') === 'on') {
       apply386(true);
+    }
+    if (NvCookie.get('nv_nb') === 'on') {
+      document.documentElement.classList.add('nv-nb');
     }
 
     // Build UI
