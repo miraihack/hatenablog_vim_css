@@ -1003,6 +1003,12 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
 .nv-386 .nv-share-btn {
   border-radius: 0 !important;
 }
+/* 386 mode: posterize images to EGA 16-color look */
+.nv-386 .entry-content img {
+  filter: url(#nv-386-posterize) !important;
+  image-rendering: pixelated;
+}
+
 .nv-386 ::selection {
   background-color: #ffff55 !important;
   color: #0000aa !important;

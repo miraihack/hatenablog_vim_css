@@ -812,8 +812,26 @@
   function apply386(active) {
     if (active) {
       document.documentElement.classList.add('nv-386');
+      if (!document.getElementById('nv-386-svg')) {
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.id = 'nv-386-svg';
+        svg.setAttribute('width', '0');
+        svg.setAttribute('height', '0');
+        svg.style.position = 'absolute';
+        svg.innerHTML =
+          '<filter id="nv-386-posterize">' +
+          '<feComponentTransfer>' +
+          '<feFuncR type="discrete" tableValues="0 0.33 0.67 1"/>' +
+          '<feFuncG type="discrete" tableValues="0 0.33 0.67 1"/>' +
+          '<feFuncB type="discrete" tableValues="0 0.33 0.67 1"/>' +
+          '</feComponentTransfer>' +
+          '</filter>';
+        document.body.appendChild(svg);
+      }
     } else {
       document.documentElement.classList.remove('nv-386');
+      var el = document.getElementById('nv-386-svg');
+      if (el) el.remove();
     }
   }
 
