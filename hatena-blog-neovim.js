@@ -316,7 +316,7 @@
     var searchInput = document.getElementById('nv-search-input');
     var writer = document.getElementById('nv-writer');
     if (prompt) { prompt.classList.add('nv-search-mode'); prompt.classList.remove('nv-insert-mode'); }
-    if (modeLabel) modeLabel.textContent = ' SEARCH';
+    if (modeLabel) modeLabel.textContent = ' COMMAND';
     if (writer) writer.style.display = 'none';
     if (searchInput) {
       searchInput.style.display = 'block';
