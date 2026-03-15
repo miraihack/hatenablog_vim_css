@@ -940,7 +940,30 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   font-style: normal;
   font-display: swap;
 }
-.nv-386 {
+/* 386 common styles */
+.nv-386 * {
+  font-family: 'DOS', 'Px437_IBM_EGA8', Monaco, Menlo, Consolas, 'Courier New', monospace !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+  font-variant-ligatures: none !important;
+}
+.nv-386 #container-inner {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.nv-386 #nv-topbar { border-radius: 0 !important; }
+.nv-386 .nv-prompt { border-radius: 0 !important; }
+.nv-386 .nv-mode-badge { border-radius: 0 !important; }
+.nv-386 .nv-share-btn { border-radius: 0 !important; }
+.nv-386 .entry-content img {
+  filter: url(#nv-386-posterize) !important;
+  image-rendering: pixelated;
+}
+
+/* 386 + light mode: DOS blue */
+.nv-light.nv-386 {
   --bg-color: #0000aa !important;
   --bg-solid: #0000aa !important;
   --font-color: #ffffff !important;
@@ -959,64 +982,50 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   --hr-color: rgba(0, 170, 0, 0.5) !important;
   --keyword-dot: rgba(0, 170, 0, 0.4) !important;
 }
-.nv-386,
-.nv-386 body {
-  background-color: #000080 !important;
-}
-.nv-386 #container-inner {
-  border-radius: 0 !important;
-  box-shadow: none !important;
+.nv-light.nv-386,
+.nv-light.nv-386 body { background-color: #000080 !important; }
+.nv-light.nv-386 #container-inner {
   border: 2px solid #00aa00 !important;
   background-color: #0000aa !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
-.nv-386 #nv-topbar {
-  border-radius: 0 !important;
-  background-color: #0000aa !important;
-  border-bottom: 1px solid #00aa00 !important;
-}
-.nv-386 .nv-prompt {
-  border-radius: 0 !important;
-  background-color: #0000aa !important;
-  border-top: 1px solid #00aa00 !important;
-}
-.nv-386 * {
-  font-family: 'DOS', 'Px437_IBM_EGA8', Monaco, Menlo, Consolas, 'Courier New', monospace !important;
-  border-radius: 0 !important;
-  text-shadow: none !important;
-  font-variant-ligatures: none !important;
-}
-.nv-386 .entry-content pre {
-  border: 1px solid #00aa00 !important;
-  background-color: #000080 !important;
-}
-.nv-386 .entry-content blockquote {
-  border: 1px solid #00aa00 !important;
-  border-left: 3px solid #00aa00 !important;
-  background-color: #000080 !important;
-  border-radius: 0 !important;
-}
-.nv-386 .nv-mode-badge {
-  border-radius: 0 !important;
-}
-.nv-386 .nv-share-btn {
-  border-radius: 0 !important;
-}
-/* 386 mode: posterize images to EGA 16-color look */
-.nv-386 .entry-content img {
-  filter: url(#nv-386-posterize) !important;
-  image-rendering: pixelated;
-}
+.nv-light.nv-386 #nv-topbar { background-color: #0000aa !important; border-bottom: 1px solid #00aa00 !important; }
+.nv-light.nv-386 .nv-prompt { background-color: #0000aa !important; border-top: 1px solid #00aa00 !important; }
+.nv-light.nv-386 .entry-content pre { border: 1px solid #00aa00 !important; background-color: #000080 !important; }
+.nv-light.nv-386 .entry-content blockquote { border: 1px solid #00aa00 !important; border-left: 3px solid #00aa00 !important; background-color: #000080 !important; }
+.nv-light.nv-386 ::selection { background-color: #ffff55 !important; color: #0000aa !important; }
+.nv-light.nv-386 ::-webkit-scrollbar-thumb { background: #00aa00 !important; border-radius: 0 !important; }
+.nv-light.nv-386 ::-webkit-scrollbar-track { background: #000080 !important; }
 
-.nv-386 ::selection {
-  background-color: #ffff55 !important;
-  color: #0000aa !important;
+/* 386 + dark mode: black terminal */
+.nv-dark.nv-386 {
+  --bg-color: #000000 !important;
+  --bg-solid: #000000 !important;
+  --font-color: #aaaaaa !important;
+  --blue: #5555ff !important;
+  --yellow: #ffff55 !important;
+  --green: #00aa00 !important;
+  --purple: #ff55ff !important;
+  --lavender: #55ffff !important;
+  --selection: rgba(170, 170, 170, 0.3) !important;
+  --border-color: #555555 !important;
+  --tab-inactive: rgba(170, 170, 170, 0.5) !important;
+  --code-bg: rgba(85, 85, 85, 0.2) !important;
+  --blockquote-border: rgba(85, 85, 85, 0.4) !important;
+  --table-border: rgba(85, 85, 85, 0.4) !important;
+  --table-header-bg: rgba(85, 85, 85, 0.2) !important;
+  --hr-color: rgba(85, 85, 85, 0.5) !important;
+  --keyword-dot: rgba(85, 85, 85, 0.4) !important;
 }
-.nv-386 ::-webkit-scrollbar-thumb {
-  background: #00aa00 !important;
-  border-radius: 0 !important;
+.nv-dark.nv-386,
+.nv-dark.nv-386 body { background-color: #000000 !important; }
+.nv-dark.nv-386 #container-inner {
+  border: 2px solid #555555 !important;
+  background-color: #000000 !important;
 }
-.nv-386 ::-webkit-scrollbar-track {
-  background: #000080 !important;
-}
+.nv-dark.nv-386 #nv-topbar { background-color: #000000 !important; border-bottom: 1px solid #555555 !important; }
+.nv-dark.nv-386 .nv-prompt { background-color: #000000 !important; border-top: 1px solid #555555 !important; }
+.nv-dark.nv-386 .entry-content pre { border: 1px solid #555555 !important; background-color: #111111 !important; }
+.nv-dark.nv-386 .entry-content blockquote { border: 1px solid #555555 !important; border-left: 3px solid #555555 !important; background-color: #111111 !important; }
+.nv-dark.nv-386 ::selection { background-color: #aaaaaa !important; color: #000000 !important; }
+.nv-dark.nv-386 ::-webkit-scrollbar-thumb { background: #555555 !important; border-radius: 0 !important; }
+.nv-dark.nv-386 ::-webkit-scrollbar-track { background: #111111 !important; }
