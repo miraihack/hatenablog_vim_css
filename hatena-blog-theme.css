@@ -902,12 +902,29 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   border-radius: 0;
   overflow: hidden !important;
 }
-.nv-mobile #content,
+.nv-mobile #content {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
 .nv-mobile #content-inner {
   display: block !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
 }
 .nv-mobile #wrapper {
   display: block !important;
+  height: 100% !important;
+}
+.nv-mobile #main {
+  display: block !important;
+  height: 100% !important;
+}
+.nv-mobile #main-inner {
+  overflow-y: auto !important;
+  height: 100% !important;
 }
 .nv-mobile #main-inner {
   padding: 3px 3% 20px 3% !important;
