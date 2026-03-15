@@ -245,6 +245,19 @@
     });
     titleDiv.appendChild(toggle386);
 
+    // Kodomo toggle (furigana mode)
+    var toggleKodomo = document.createElement('div');
+    toggleKodomo.id = 'nv-kodomo-toggle';
+    toggleKodomo.innerHTML =
+      '<span id="nv-kodomo-label">\u5B50\u4F9B</span>' +
+      '<div id="nv-kodomo-toggle-track"><div id="nv-kodomo-toggle-thumb"></div></div>';
+    toggleKodomo.addEventListener('click', function () {
+      var active = document.documentElement.classList.toggle('nv-kodomo');
+      NvCookie.set('nv_kodomo', active ? 'on' : 'off');
+      applyKodomo(active);
+    });
+    titleDiv.appendChild(toggleKodomo);
+
     topbar.appendChild(titleDiv);
 
     var tabBar = document.createElement('div');
@@ -835,6 +848,93 @@
     }
   }
 
+  // ─── Kodomo mode (furigana) ───
+  var _KURO_JS = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/build/kuromoji.js';
+  var _KURO_DICT = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/';
+
+  function applyKodomo(active) {
+    if (active) {
+      document.documentElement.classList.add('nv-kodomo');
+      if (window._nvTokenizer) {
+        _nvAddFurigana(window._nvTokenizer);
+      } else {
+        var lbl = document.getElementById('nv-kodomo-label');
+        if (lbl) lbl.textContent = '\u5B50\u4F9B\u23F3';
+        var s = document.createElement('script');
+        s.src = _KURO_JS;
+        s.onload = function () {
+          kuromoji.builder({ dicPath: _KURO_DICT }).build(function (err, tok) {
+            if (lbl) lbl.textContent = '\u5B50\u4F9B';
+            if (err) return;
+            window._nvTokenizer = tok;
+            if (document.documentElement.classList.contains('nv-kodomo')) {
+              _nvAddFurigana(tok);
+            }
+          });
+        };
+        s.onerror = function () { if (lbl) lbl.textContent = '\u5B50\u4F9B'; };
+        document.head.appendChild(s);
+      }
+    } else {
+      document.documentElement.classList.remove('nv-kodomo');
+      _nvRemoveFurigana();
+    }
+  }
+
+  function _nvKataToHira(str) {
+    return str.replace(/[\u30A1-\u30F6]/g, function (ch) {
+      return String.fromCharCode(ch.charCodeAt(0) - 0x60);
+    });
+  }
+
+  function _nvEscHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function _nvAddFurigana(tokenizer) {
+    _nvRemoveFurigana();
+    var contents = document.querySelectorAll('.entry-content');
+    contents.forEach(function (content) {
+      var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null, false);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        var text = node.textContent;
+        if (!/[\u4E00-\u9FAF\u3400-\u4DBF]/.test(text)) return;
+        var p = node.parentNode;
+        if (!p || /^(SCRIPT|STYLE|CODE|PRE|RT|RP|RUBY)$/.test(p.tagName)) return;
+        var tokens = tokenizer.tokenize(text);
+        var html = '';
+        tokens.forEach(function (t) {
+          var sf = _nvEscHtml(t.surface_form);
+          var rd = t.reading;
+          if (rd && /[\u4E00-\u9FAF\u3400-\u4DBF]/.test(t.surface_form)) {
+            var h = _nvKataToHira(rd);
+            if (h !== t.surface_form) {
+              html += '<ruby>' + sf + '<rp>(</rp><rt>' + _nvEscHtml(h) + '</rt><rp>)</rp></ruby>';
+              return;
+            }
+          }
+          html += sf;
+        });
+        var span = document.createElement('span');
+        span.className = 'nv-ruby';
+        span.setAttribute('data-nv-orig', text);
+        span.innerHTML = html;
+        p.replaceChild(span, node);
+      });
+    });
+  }
+
+  function _nvRemoveFurigana() {
+    document.querySelectorAll('.nv-ruby').forEach(function (el) {
+      var orig = el.getAttribute('data-nv-orig');
+      if (orig) {
+        el.parentNode.replaceChild(document.createTextNode(orig), el);
+      }
+    });
+  }
+
   // ─── Init ───
   function init() {
     // Apply theme: cookie > system preference > dark default
@@ -860,9 +960,12 @@
       document.documentElement.classList.add('nv-mobile');
     }
 
-    // Apply 386 / nobunaga mode from cookie
+    // Apply special modes from cookie
     if (NvCookie.get('nv_386') === 'on') {
       apply386(true);
+    }
+    if (NvCookie.get('nv_kodomo') === 'on') {
+      applyKodomo(true);
     }
 
     // Build UI
