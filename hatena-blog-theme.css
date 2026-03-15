@@ -939,6 +939,7 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   flex-wrap: nowrap !important;
   width: 200% !important;
   max-width: none !important;
+  height: 100% !important;
   transition: transform 0.3s ease;
 }
 .nv-mobile #nv-slide-rail.nv-show-files {
@@ -952,6 +953,7 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
   flex-shrink: 0 !important;
   box-shadow: none !important;
   overflow-y: auto !important;
+  height: 100% !important;
 }
 .nv-mobile #nv-slide-rail > #nv-files {
   padding: 15px 10px !important;
