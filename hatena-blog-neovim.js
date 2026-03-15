@@ -810,22 +810,38 @@
 
   // ─── 386 mode ───
   var BOOTSTRA_386_URL = 'https://cdn.jsdelivr.net/gh/kristopolous/BOOTSTRA.386@master/v5.3.1/dist/css/bootstrap.min.css';
+  var _386CssCache = null;
 
   function apply386(active) {
-    var linkEl = document.getElementById('nv-386-css');
     if (active) {
-      if (!linkEl) {
-        linkEl = document.createElement('link');
-        linkEl.id = 'nv-386-css';
-        linkEl.rel = 'stylesheet';
-        linkEl.href = BOOTSTRA_386_URL;
-        document.head.appendChild(linkEl);
-      }
       document.documentElement.classList.add('nv-386');
+      var existing = document.getElementById('nv-386-css');
+      if (existing) return;
+      if (_386CssCache) {
+        inject386Style(_386CssCache);
+      } else {
+        fetch(BOOTSTRA_386_URL)
+          .then(function (r) { return r.text(); })
+          .then(function (css) {
+            _386CssCache = css;
+            inject386Style(css);
+          })
+          .catch(function () {});
+      }
     } else {
-      if (linkEl) linkEl.remove();
+      var el = document.getElementById('nv-386-css');
+      if (el) el.remove();
       document.documentElement.classList.remove('nv-386');
     }
+  }
+
+  function inject386Style(css) {
+    var el = document.getElementById('nv-386-css');
+    if (el) return;
+    var style = document.createElement('style');
+    style.id = 'nv-386-css';
+    style.textContent = css;
+    document.head.appendChild(style);
   }
 
   // ─── Init ───
