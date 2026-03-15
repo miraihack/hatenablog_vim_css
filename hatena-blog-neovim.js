@@ -186,10 +186,10 @@
       showUganda();
     });
 
-    // Yellow: toggle minimized (small window) mode
+    // Yellow: toggle minimized (small window) mode — desktop only
     lights.querySelector('.nv-light-yellow').addEventListener('click', function (e) {
       e.stopPropagation();
-      toggleMinimized();
+      if (!isMobile()) toggleMinimized();
     });
 
     // Green: toggle fullscreen (hide header/footer)
