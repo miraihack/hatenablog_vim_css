@@ -245,6 +245,19 @@
     });
     titleDiv.appendChild(toggle386);
 
+    // 1984 toggle (Big Brother mode)
+    var toggle1984 = document.createElement('div');
+    toggle1984.id = 'nv-1984-toggle';
+    toggle1984.innerHTML =
+      '<span id="nv-1984-label">1984</span>' +
+      '<div id="nv-1984-toggle-track"><div id="nv-1984-toggle-thumb"></div></div>';
+    toggle1984.addEventListener('click', function () {
+      var active = document.documentElement.classList.toggle('nv-1984');
+      NvCookie.set('nv_1984', active ? 'on' : 'off');
+      apply1984(active);
+    });
+    titleDiv.appendChild(toggle1984);
+
     topbar.appendChild(titleDiv);
 
     var tabBar = document.createElement('div');
@@ -835,6 +848,75 @@
     }
   }
 
+  // ─── 1984 mode ───
+  var _1984_IMG = 'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260315/20260315112618.jpg';
+  var _1984_MSGS = [
+    'BIG BROTHER IS WATCHING YOU',
+    'WAR IS PEACE',
+    'FREEDOM IS SLAVERY',
+    'IGNORANCE IS STRENGTH',
+    'WHO CONTROLS THE PAST CONTROLS THE FUTURE',
+    'WHO CONTROLS THE PRESENT CONTROLS THE PAST',
+    'DOUBLETHINK MEANS THE POWER OF HOLDING TWO CONTRADICTORY BELIEFS',
+    'THE PARTY TOLD YOU TO REJECT THE EVIDENCE OF YOUR EYES AND EARS',
+    'THOUGHTCRIME DOES NOT ENTAIL DEATH. THOUGHTCRIME IS DEATH',
+    'IF YOU WANT A PICTURE OF THE FUTURE, IMAGINE A BOOT STAMPING ON A HUMAN FACE \u2014 FOREVER',
+    'POWER IS NOT A MEANS; IT IS AN END',
+    'ALL ANIMALS ARE EQUAL, BUT SOME ANIMALS ARE MORE EQUAL THAN OTHERS',
+    'THE BEST BOOKS ARE THOSE THAT TELL YOU WHAT YOU KNOW ALREADY',
+    'REALITY EXISTS IN THE HUMAN MIND, AND NOWHERE ELSE',
+    '\u504F\u611B\u3059\u308B\u5144\u5F1F\u304C\u3042\u306A\u305F\u3092\u898B\u5B88\u3063\u3066\u3044\u307E\u3059',
+    '\u6226\u4E89\u306F\u5E73\u548C\u3067\u3042\u308B',
+    '\u81EA\u7531\u306F\u96B7\u5C5E\u3067\u3042\u308B',
+    '\u7121\u77E5\u306F\u529B\u3067\u3042\u308B',
+    '\u601D\u8003\u72AF\u7F6A\u306F\u6B7B\u3092\u610F\u5473\u3057\u306A\u3044\u3002\u601D\u8003\u72AF\u7F6A\u304C\u6B7B\u3067\u3042\u308B',
+    '\u515A\u3092\u8B83\u3048\u3088\uFF01\u5146\u6C11\u306E\u5149\u3088\uFF01'
+  ];
+
+  function apply1984(active) {
+    if (active) {
+      document.documentElement.classList.add('nv-1984');
+      // Replace images
+      document.querySelectorAll('.entry-content img').forEach(function (img) {
+        if (!img.getAttribute('data-nv-orig-src')) {
+          img.setAttribute('data-nv-orig-src', img.src);
+        }
+        img.src = _1984_IMG;
+      });
+      // Insert propaganda
+      if (!document.querySelector('.nv-1984-msg')) {
+        var entries = document.querySelectorAll('.entry-content');
+        entries.forEach(function (entry) {
+          var paras = entry.querySelectorAll('p, h2, h3, h4, li');
+          var indices = [];
+          for (var i = 0; i < paras.length; i++) indices.push(i);
+          // Shuffle and pick ~30% of elements
+          for (var j = indices.length - 1; j > 0; j--) {
+            var k = Math.floor(Math.random() * (j + 1));
+            var tmp = indices[j]; indices[j] = indices[k]; indices[k] = tmp;
+          }
+          var count = Math.max(2, Math.floor(paras.length * 0.3));
+          for (var m = 0; m < Math.min(count, indices.length); m++) {
+            var el = paras[indices[m]];
+            var msg = document.createElement('div');
+            msg.className = 'nv-1984-msg';
+            msg.textContent = _1984_MSGS[Math.floor(Math.random() * _1984_MSGS.length)];
+            el.parentNode.insertBefore(msg, el.nextSibling);
+          }
+        });
+      }
+    } else {
+      document.documentElement.classList.remove('nv-1984');
+      // Restore images
+      document.querySelectorAll('.entry-content img[data-nv-orig-src]').forEach(function (img) {
+        img.src = img.getAttribute('data-nv-orig-src');
+        img.removeAttribute('data-nv-orig-src');
+      });
+      // Remove propaganda
+      document.querySelectorAll('.nv-1984-msg').forEach(function (el) { el.remove(); });
+    }
+  }
+
   // ─── Init ───
   function init() {
     // Apply theme: cookie > system preference > dark default
@@ -863,6 +945,9 @@
     // Apply special modes from cookie
     if (NvCookie.get('nv_386') === 'on') {
       apply386(true);
+    }
+    if (NvCookie.get('nv_1984') === 'on') {
+      apply1984(true);
     }
 
     // Build UI

@@ -271,6 +271,83 @@ a:visited { color: var(--blue); }
   color: #00ff00;
 }
 
+/* --- 1984 toggle switch --- */
+#nv-1984-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--tab-inactive);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  height: 100%;
+  box-shadow: calc(-1 * var(--border-width)) 0px 0px 0px var(--border-color) inset;
+  gap: 6px;
+}
+#nv-1984-toggle:hover {
+  color: var(--font-color);
+  background-color: var(--selection);
+}
+#nv-1984-toggle-track {
+  width: 32px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--tab-inactive);
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+#nv-1984-toggle-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--font-color);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+.nv-1984 #nv-1984-toggle-track {
+  background: #cc0000;
+}
+.nv-1984 #nv-1984-toggle-thumb {
+  left: 18px;
+}
+.nv-1984 #nv-1984-label {
+  color: #cc0000;
+  font-weight: bold;
+}
+
+/* --- 1984 mode styles --- */
+.nv-1984 .entry-content p,
+.nv-1984 .entry-content li,
+.nv-1984 .entry-content h1,
+.nv-1984 .entry-content h2,
+.nv-1984 .entry-content h3,
+.nv-1984 .entry-content h4,
+.nv-1984 .entry-content h5,
+.nv-1984 .entry-content blockquote,
+.nv-1984 .entry-content td,
+.nv-1984 .entry-content th {
+  text-decoration: line-through !important;
+  text-decoration-color: #cc0000 !important;
+  text-decoration-thickness: 2px !important;
+}
+.nv-1984-msg {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #cc0000 !important;
+  padding: 0.6em 1em;
+  margin: 0.8em 0;
+  border: 1px solid #cc0000;
+  background: rgba(204, 0, 0, 0.08);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
 #nv-title-bar a {
   font-size: 16px;
   color: var(--font-color);
