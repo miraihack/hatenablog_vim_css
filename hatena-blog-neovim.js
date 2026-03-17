@@ -285,7 +285,7 @@
     html += '<a class="nv-share-btn nv-share-hatena" href="https://b.hatena.ne.jp/entry/s/' + window.location.host + window.location.pathname + '" target="_blank" rel="noopener">B! はてブする</a>';
     html += '<a class="nv-share-btn nv-share-x" href="https://x.com/intent/tweet?url=' + url + '&text=' + title + '" target="_blank" rel="noopener">\uD835\uDD4F Xでシェアする</a>';
     html += '<a class="nv-share-btn nv-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">f Facebookでシェアする</a>';
-    html += '<a class="nv-share-btn nv-share-reader" href="https://blog.hatena.ne.jp/register?via=200btn&url=' + encodeURIComponent(blogUrl) + '" target="_blank" rel="noopener">+ 読者登録する</a>';
+    html += '<iframe src="https://blog.hatena.ne.jp/netcraft3/netcraft3.hatenablog.com/subscribe/iframe" allowtransparency="true" frameborder="0" scrolling="no" width="150" height="28" style="vertical-align:middle;"></iframe>';
     html += '</div>';
     return html;
   }

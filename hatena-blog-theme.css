@@ -763,10 +763,6 @@ a:visited { color: var(--blue); }
   background-color: #1877F2;
   color: #fff !important;
 }
-.nv-share-reader {
-  background-color: var(--purple);
-  color: #fff !important;
-}
 
 /* ============================================
    SEARCH mode
