@@ -751,6 +751,11 @@ a:visited { color: var(--blue); }
   opacity: 0.8;
   background-color: transparent !important;
 }
+.nv-insert-buttons iframe {
+  height: 28px;
+  vertical-align: middle;
+  border: none;
+}
 .nv-share-hatena {
   background-color: #00A4DE;
   color: #fff !important;
