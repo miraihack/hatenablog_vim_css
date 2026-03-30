@@ -612,13 +612,23 @@
   var TB_H = 56, PR_H = 40;
   var _winInitialized = false;
 
+  function saveWinPos() {
+    NvCookie.set('nv_win', JSON.stringify({ x: mX, y: mY, w: mW, h: mH }));
+  }
+
   function initWindowPos() {
     if (_winInitialized) return;
     _winInitialized = true;
-    mW = Math.round(window.innerWidth * 0.8);
-    mH = Math.round(window.innerHeight * 0.8) - PR_H;
-    mX = Math.round((window.innerWidth - mW) / 2);
-    mY = Math.round(window.innerHeight * 0.1);
+    var saved = null;
+    try { saved = JSON.parse(NvCookie.get('nv_win')); } catch (e) {}
+    if (saved && saved.w >= MIN_W && saved.h >= MIN_H) {
+      mX = saved.x; mY = saved.y; mW = saved.w; mH = saved.h;
+    } else {
+      mW = Math.round(window.innerWidth * 0.8);
+      mH = Math.round(window.innerHeight * 0.8) - PR_H;
+      mX = Math.round((window.innerWidth - mW) / 2);
+      mY = Math.round(window.innerHeight * 0.1);
+    }
     applyMin();
     addResizeHandles();
   }
@@ -627,7 +637,6 @@
     var html = document.documentElement;
     if (html.classList.contains('nv-minimized')) {
       html.classList.remove('nv-minimized');
-      // Restore to 80%
       mW = Math.round(window.innerWidth * 0.8);
       mH = Math.round(window.innerHeight * 0.8) - PR_H;
       mX = Math.round((window.innerWidth - mW) / 2);
@@ -640,6 +649,7 @@
       mY = Math.round(window.innerHeight * 0.2);
     }
     applyMin();
+    saveWinPos();
   }
 
   function applyMin() {
@@ -690,7 +700,7 @@
       roX = mX; roY = mY; roW = mW; roH = mH;
     });
     document.addEventListener('mousemove', function (e) { if (resizing) doResize(e.clientX, e.clientY); });
-    document.addEventListener('mouseup', function () { resizing = false; });
+    document.addEventListener('mouseup', function () { if (resizing) saveWinPos(); resizing = false; });
 
     document.addEventListener('touchstart', function (e) {
       var t = e.target;
@@ -700,7 +710,7 @@
       roX = mX; roY = mY; roW = mW; roH = mH;
     }, { passive: true });
     document.addEventListener('touchmove', function (e) { if (resizing) doResize(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    document.addEventListener('touchend', function () { resizing = false; });
+    document.addEventListener('touchend', function () { if (resizing) saveWinPos(); resizing = false; });
 
     function doResize(ex, ey) {
       var dx = ex - rsx, dy = ey - rsy, d = rDir;
@@ -752,7 +762,7 @@
       mY = doY + (e.clientY - dsy);
       applyMin();
     });
-    document.addEventListener('mouseup', function () { dragging = false; });
+    document.addEventListener('mouseup', function () { if (dragging) saveWinPos(); dragging = false; });
 
     titleBar.addEventListener('touchstart', function (e) {
       if (isMobile()) return;
@@ -765,7 +775,7 @@
       mY = doY + (e.touches[0].clientY - dsy);
       applyMin();
     }, { passive: true });
-    document.addEventListener('touchend', function () { dragging = false; });
+    document.addEventListener('touchend', function () { if (dragging) saveWinPos(); dragging = false; });
   }
 
   // ─── Vim Uganda splash ───
