@@ -205,7 +205,7 @@
     if (titleLink) {
       var a = document.createElement('a');
       a.href = titleLink.href;
-      a.textContent = 'TOP';
+      a.textContent = 'Terminal NeoVim';
       titleDiv.appendChild(a);
     }
     // Theme toggle (switch + label, sits right next to title)
