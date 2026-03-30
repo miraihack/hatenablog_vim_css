@@ -821,6 +821,33 @@
     lastContent.appendChild(cursorBlock);
   }
 
+  // ─── Desktop icons ───
+  function buildDesktopIcons() {
+    var icons = [
+      { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal' },
+      { icon: '\uD83D\uDCC1', label: 'Projects' },
+      { icon: '\uD83D\uDC27', label: 'Linux' },
+      { icon: '\uD83D\uDD12', label: '.ssh' },
+      { icon: '\uD83D\uDCC4', label: '.vimrc' },
+      { icon: '\uD83D\uDDC3\uFE0F', label: 'node_modules' },
+      { icon: '\u2615', label: 'brew' },
+      { icon: '\uD83D\uDC19', label: 'GitHub' },
+      { icon: '\uD83E\uDDE0', label: 'AI' },
+      { icon: '\uD83D\uDEE0\uFE0F', label: 'Makefile' },
+      { icon: '\uD83D\uDDBC\uFE0F', label: 'wallpaper' },
+      { icon: '\uD83C\uDFB5', label: 'lo-fi.mp3' }
+    ];
+    var grid = document.createElement('div');
+    grid.id = 'nv-desktop-icons';
+    icons.forEach(function (item) {
+      var el = document.createElement('div');
+      el.className = 'nv-desk-icon';
+      el.innerHTML = '<span class="nv-desk-emoji">' + item.icon + '</span><span class="nv-desk-label">' + item.label + '</span>';
+      grid.appendChild(el);
+    });
+    document.body.appendChild(grid);
+  }
+
   // ─── 386 mode ───
   function apply386(active) {
     if (active) {
@@ -947,6 +974,9 @@
     if (NvCookie.get('nv_1984') === 'on') {
       apply1984(true);
     }
+
+    // Desktop icons (desktop only)
+    if (!isMobile()) buildDesktopIcons();
 
     // Build UI
     var filesPanel = buildFileBrowser();
