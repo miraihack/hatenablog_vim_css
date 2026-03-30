@@ -610,29 +610,36 @@
   var mX, mY, mW, mH; // px
   var MIN_W = 320, MIN_H = 200;
   var TB_H = 56, PR_H = 40;
+  var _winInitialized = false;
+
+  function initWindowPos() {
+    if (_winInitialized) return;
+    _winInitialized = true;
+    mW = Math.round(window.innerWidth * 0.8);
+    mH = Math.round(window.innerHeight * 0.8) - PR_H;
+    mX = Math.round((window.innerWidth - mW) / 2);
+    mY = Math.round(window.innerHeight * 0.1);
+    applyMin();
+    addResizeHandles();
+  }
 
   function toggleMinimized() {
     var html = document.documentElement;
     if (html.classList.contains('nv-minimized')) {
       html.classList.remove('nv-minimized');
-      // Clear inline styles
-      var tb = document.getElementById('nv-topbar');
-      var ci = document.getElementById('container-inner');
-      var pr = document.getElementById('nv-prompt');
-      if (tb) tb.removeAttribute('style');
-      if (ci) ci.removeAttribute('style');
-      if (pr) pr.removeAttribute('style');
-      // Remove resize handles
-      document.querySelectorAll('.nv-resize-handle').forEach(function (h) { h.remove(); });
+      // Restore to 80%
+      mW = Math.round(window.innerWidth * 0.8);
+      mH = Math.round(window.innerHeight * 0.8) - PR_H;
+      mX = Math.round((window.innerWidth - mW) / 2);
+      mY = Math.round(window.innerHeight * 0.1);
     } else {
       html.classList.add('nv-minimized');
-      mW = Math.round(window.innerWidth * 0.6);
-      mH = Math.round(window.innerHeight * 0.55);
+      mW = Math.round(window.innerWidth * 0.5);
+      mH = Math.round(window.innerHeight * 0.45);
       mX = Math.round((window.innerWidth - mW) / 2);
-      mY = Math.round(window.innerHeight * 0.15);
-      applyMin();
-      addResizeHandles();
+      mY = Math.round(window.innerHeight * 0.2);
     }
+    applyMin();
   }
 
   function applyMin() {
@@ -734,8 +741,8 @@
     var dragging = false, dsx = 0, dsy = 0, doX = 0, doY = 0;
 
     titleBar.addEventListener('mousedown', function (e) {
-      if (!document.documentElement.classList.contains('nv-minimized')) return;
-      if (e.target.closest('a, button, #nv-theme-toggle, #nv-traffic-lights span')) return;
+      if (isMobile()) return;
+      if (e.target.closest('a, button, #nv-theme-toggle, #nv-386-toggle, #nv-1984-toggle, #nv-traffic-lights span')) return;
       e.preventDefault();
       dragging = true; dsx = e.clientX; dsy = e.clientY; doX = mX; doY = mY;
     });
@@ -748,8 +755,8 @@
     document.addEventListener('mouseup', function () { dragging = false; });
 
     titleBar.addEventListener('touchstart', function (e) {
-      if (!document.documentElement.classList.contains('nv-minimized')) return;
-      if (e.target.closest('a, button, #nv-theme-toggle, #nv-traffic-lights span')) return;
+      if (isMobile()) return;
+      if (e.target.closest('a, button, #nv-theme-toggle, #nv-386-toggle, #nv-1984-toggle, #nv-traffic-lights span')) return;
       dragging = true; dsx = e.touches[0].clientX; dsy = e.touches[0].clientY; doX = mX; doY = mY;
     }, { passive: true });
     document.addEventListener('touchmove', function (e) {
@@ -975,8 +982,11 @@
       apply1984(true);
     }
 
-    // Desktop icons (desktop only)
-    if (!isMobile()) buildDesktopIcons();
+    // Desktop: window positioning + icons
+    if (!isMobile()) {
+      initWindowPos();
+      buildDesktopIcons();
+    }
 
     // Build UI
     var filesPanel = buildFileBrowser();
