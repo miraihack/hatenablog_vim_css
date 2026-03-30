@@ -74,8 +74,7 @@
 html, body {
   margin: 0 !important;
   padding: 0 !important;
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 100%) !important;
-  background-attachment: fixed !important;
+  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260330/20260330190302_original.jpg') center/cover no-repeat fixed !important;
   color: var(--font-color);
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
@@ -85,8 +84,7 @@ html, body {
 }
 .nv-light,
 .nv-light body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 70%, #f5576c 100%) !important;
-  background-attachment: fixed !important;
+  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260330/20260330190302_original.jpg') center/cover no-repeat fixed !important;
 }
 
 /* --- Desktop icons --- */
