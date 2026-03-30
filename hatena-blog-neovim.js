@@ -992,9 +992,8 @@
       apply1984(true);
     }
 
-    // Desktop: window positioning + icons
+    // Desktop icons
     if (!isMobile()) {
-      initWindowPos();
       buildDesktopIcons();
     }
 
@@ -1003,6 +1002,11 @@
     buildTabBar();
     buildPromptBar();
     setupContentLinks();
+
+    // Desktop: apply saved window position (after UI is built)
+    if (!isMobile()) {
+      initWindowPos();
+    }
 
     // Cursor
     cursor = document.getElementById('nv-cursor');
