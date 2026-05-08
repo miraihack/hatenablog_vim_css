@@ -1167,12 +1167,102 @@
     render();
   }
 
+  // ─── Linux boot screen (opens when Linux desktop icon is clicked) ───
+  function openLinuxBoot() {
+    var existing = document.getElementById('nv-linux-boot');
+    if (existing) { existing.style.display = 'flex'; return; }
+
+    var win = document.createElement('div');
+    win.id = 'nv-linux-boot';
+    win.innerHTML =
+      '<div class="nv-linux-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red" data-act="close"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-terminal-title">hatebu — tty1</span>' +
+      '</div>' +
+      '<div class="nv-linux-body"></div>';
+    document.body.appendChild(win);
+
+    var body = win.querySelector('.nv-linux-body');
+    win.querySelector('[data-act="close"]').addEventListener('click', function () { win.remove(); });
+    makeWindowDraggable(win, win.querySelector('.nv-linux-header'));
+
+    function ts(n) {
+      var s = n.toFixed(6);
+      while (s.length < 11) s = ' ' + s;
+      return '[' + s + ']';
+    }
+    function append(html) {
+      var line = document.createElement('div');
+      line.className = 'nv-linux-line';
+      line.innerHTML = html;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+    }
+    function escapeHtml(s) {
+      return s.replace(/[&<>]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]; });
+    }
+
+    var seq = [
+      [0,    'k', 0.000000, 'Linux version 6.6.0-hatebu-generic (saito@hatebu) (gcc 13.2.0) #1 SMP PREEMPT_DYNAMIC ' + new Date().toDateString()],
+      [40,   'k', 0.001234, 'Command line: BOOT_IMAGE=/vmlinuz-6.6.0-hatebu root=/dev/sda1 ro quiet splash'],
+      [40,   'k', 0.012458, 'KERNEL supported cpus:'],
+      [20,   'k', 0.012602, '  Intel GenuineIntel'],
+      [20,   'k', 0.012712, '  AMD AuthenticAMD'],
+      [40,   'k', 0.034521, 'BIOS-provided physical RAM map:'],
+      [20,   'k', 0.034522, 'BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable'],
+      [20,   'k', 0.034523, 'BIOS-e820: [mem 0x0000000000100000-0x00000000bfeeffff] usable'],
+      [60,   'k', 0.123456, 'random: crng init done'],
+      [40,   'k', 0.234567, 'Booting paravirtualized kernel on bare hardware'],
+      [40,   'k', 0.345678, 'smpboot: CPU0: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz'],
+      [40,   'k', 0.456789, 'ACPI: bus type USB registered'],
+      [40,   'k', 0.567890, 'usbcore: registered new interface driver usbfs'],
+      [40,   'k', 0.678901, 'EXT4-fs (sda1): mounted filesystem with ordered data mode'],
+      [60,   'k', 0.890123, 'systemd[1]: Hatena Blog Linux 6.6.0-hatebu running in system mode'],
+      [60,   'k', 1.012345, 'systemd[1]: Detected architecture x86-64'],
+      [80,   'k', 1.234567, 'systemd[1]: Set hostname to <hatebu>.'],
+      [120,  's', 'Started', 'Journal Service.'],
+      [80,   's', 'Started', 'Hostname Service.'],
+      [80,   's', 'Reached', 'target System Initialization.'],
+      [80,   's', 'Started', 'D-Bus System Message Bus.'],
+      [80,   's', 'Started', 'Network Manager.'],
+      [80,   's', 'Started', 'OpenBSD Secure Shell server.'],
+      [80,   's', 'Started', 'Daily apt download activities.'],
+      [80,   's', 'Reached', 'target Multi-User System.'],
+      [80,   's', 'Started', 'Getty on tty1.'],
+      [200,  'b', ''],
+      [40,   'b', 'Hatena Blog Linux 6.6.0-hatebu hatebu tty1'],
+      [40,   'b', ''],
+      [40,   'p', '']
+    ];
+
+    var t = 0;
+    seq.forEach(function (item) {
+      t += item[0];
+      setTimeout(function () {
+        if (!document.body.contains(win)) return;
+        if (item[1] === 'k') {
+          append('<span class="nv-linux-ts">' + ts(item[2]) + '</span> ' + escapeHtml(item[3]));
+        } else if (item[1] === 's') {
+          append('[<span class="nv-linux-ok">  OK  </span>] ' + item[2] + ' ' + escapeHtml(item[3]));
+        } else if (item[1] === 'p') {
+          append('hatebu login: <span class="nv-linux-cursor">&nbsp;</span>');
+        } else {
+          append(item[2] ? escapeHtml(item[2]) : '&nbsp;');
+        }
+      }, t);
+    });
+  }
+
   // ─── Desktop icons ───
   function buildDesktopIcons() {
     var icons = [
       { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal', action: openTerminal },
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
-      { icon: '\uD83D\uDC27', label: 'Linux' },
+      { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
       { icon: '\uD83D\uDD12', label: '.ssh' },
       { icon: '\uD83D\uDCC4', label: '.vimrc' },
       { icon: '\uD83D\uDDC3\uFE0F', label: 'node_modules' },
