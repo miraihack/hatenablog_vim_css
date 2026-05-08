@@ -1485,6 +1485,7 @@
     icons.forEach(function (item) {
       var el = document.createElement('div');
       el.className = 'nv-desk-icon';
+      el.setAttribute('data-label', item.label);
       el.innerHTML = '<span class="nv-desk-emoji">' + item.icon + '</span><span class="nv-desk-label">' + item.label + '</span>';
       if (item.action) {
         el.style.cursor = 'pointer';

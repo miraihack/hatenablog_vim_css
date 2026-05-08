@@ -145,6 +145,9 @@ html, body {
 .nv-window-hidden .nv-prompt {
   display: none !important;
 }
+/* The Blog icon is the restore handle — show it only when the window is hidden */
+.nv-desk-icon[data-label="Blog"] { display: none !important; }
+.nv-window-hidden .nv-desk-icon[data-label="Blog"] { display: flex !important; }
 
 /* --- Terminal app (opens from desktop icon) --- */
 #nv-terminal {
