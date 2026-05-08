@@ -1263,15 +1263,8 @@
       { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal', action: openTerminal },
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
-      { icon: '\uD83D\uDD12', label: '.ssh' },
-      { icon: '\uD83D\uDCC4', label: '.vimrc' },
-      { icon: '\uD83D\uDDC3\uFE0F', label: 'node_modules' },
-      { icon: '\u2615', label: 'brew' },
       { icon: '\uD83D\uDC19', label: 'GitHub' },
-      { icon: '\uD83E\uDDE0', label: 'AI' },
-      { icon: '\uD83D\uDEE0\uFE0F', label: 'Makefile' },
-      { icon: '\uD83D\uDDBC\uFE0F', label: 'wallpaper' },
-      { icon: '\uD83C\uDFB5', label: 'lo-fi.mp3' }
+      { icon: '\uD83E\uDDE0', label: 'AI' }
     ];
     var grid = document.createElement('div');
     grid.id = 'nv-desktop-icons';
