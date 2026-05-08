@@ -1264,7 +1264,8 @@
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
       { icon: '\uD83D\uDC19', label: 'GitHub' },
-      { icon: '\uD83E\uDDE0', label: 'AI' }
+      { icon: '\uD83E\uDDE0', label: 'AI' },
+      { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper' }
     ];
     var grid = document.createElement('div');
     grid.id = 'nv-desktop-icons';
