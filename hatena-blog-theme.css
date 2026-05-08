@@ -1148,6 +1148,15 @@ a:visited { color: var(--blue); }
 
 .nv-mobile .entry-content img { max-width: 98% !important; }
 
+/* On mobile, disable text-wrap: pretty — Japanese text has small chars
+   and pretty's widow/orphan adjustment makes paragraph right-edges
+   visibly uneven. Fall back to default auto wrapping. */
+.nv-mobile .entry-content,
+.nv-mobile .entry-content p,
+.nv-mobile .entry-content li {
+  text-wrap: auto;
+}
+
 
 /* --- Horizontal Rule --- */
 .entry-content hr { border: none; border-top: 1px solid var(--hr-color); margin: 1.5em 0; }
