@@ -459,6 +459,14 @@ html, body {
   font-weight: bold;
   font-size: 13px;
 }
+.nv-wp-credit {
+  flex-shrink: 0;
+  padding: 8px 16px 12px;
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
 .nv-mobile #nv-wallpaper { width: 95vw; height: 80vh; }
 
 /* --- Filer app (Finder-like, opens from Projects icon) --- */

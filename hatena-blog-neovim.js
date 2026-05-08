@@ -1200,7 +1200,8 @@
         '</span>' +
         '<span class="nv-aichat-title">Wallpaper</span>' +
       '</div>' +
-      '<div class="nv-wp-grid">' + thumbsHtml + '</div>';
+      '<div class="nv-wp-grid">' + thumbsHtml + '</div>' +
+      '<div class="nv-wp-credit">撮影者: サイバーメガネ ／ ライセンス: CC</div>';
     document.body.appendChild(win);
 
     win.querySelector('[data-act="close"]').addEventListener('click', function () { win.remove(); });
