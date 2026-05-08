@@ -1373,6 +1373,33 @@
       [40,   'p', '']
     ];
 
+    function ask(label, hidden, cb) {
+      var line = document.createElement('div');
+      line.className = 'nv-linux-line';
+      line.innerHTML = escapeHtml(label) + '<input class="nv-linux-input' + (hidden ? ' nv-linux-input-hidden' : '') + '" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">';
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+      var input = line.querySelector('.nv-linux-input');
+      input.focus();
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          var val = input.value;
+          line.innerHTML = escapeHtml(label) + (hidden ? '' : escapeHtml(val));
+          cb(val);
+        }
+      });
+    }
+    function loginLoop() {
+      ask('hatebu login: ', false, function () {
+        ask('Password: ', true, function () {
+          append('Login incorrect');
+          append('&nbsp;');
+          loginLoop();
+        });
+      });
+    }
+
     var t = 0;
     seq.forEach(function (item) {
       t += item[0];
@@ -1383,7 +1410,7 @@
         } else if (item[1] === 's') {
           append('[<span class="nv-linux-ok">  OK  </span>] ' + item[2] + ' ' + escapeHtml(item[3]));
         } else if (item[1] === 'p') {
-          append('hatebu login: <span class="nv-linux-cursor">&nbsp;</span>');
+          loginLoop();
         } else {
           append(item[2] ? escapeHtml(item[2]) : '&nbsp;');
         }
@@ -1397,7 +1424,6 @@
       { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal', action: openTerminal },
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
-      { icon: '\uD83D\uDC19', label: 'GitHub' },
       { icon: '\uD83E\uDDE0', label: 'AI', action: openAIChat },
       { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper', action: openWallpaperPicker }
     ];
