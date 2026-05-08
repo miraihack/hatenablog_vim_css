@@ -1167,6 +1167,53 @@
     render();
   }
 
+  // ─── Wallpaper (opens when Wallpaper desktop icon is clicked) ───
+  var WALLPAPERS = [
+    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg',
+    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509013601_original.jpg',
+    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014154_original.jpg',
+    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014229_original.jpg'
+  ];
+  function applyWallpaper(url) {
+    document.documentElement.style.setProperty('--nv-wallpaper', "url('" + url + "')");
+  }
+  function openWallpaperPicker() {
+    var existing = document.getElementById('nv-wallpaper');
+    if (existing) { existing.style.display = 'flex'; return; }
+
+    var current = NvCookie.get('nv_wallpaper') || WALLPAPERS[0];
+    var thumbsHtml = WALLPAPERS.map(function (u) {
+      var sel = u === current ? ' nv-wp-selected' : '';
+      return '<div class="nv-wp-thumb' + sel + '" data-url="' + u + '" style="background-image:url(\'' + u + '\')"></div>';
+    }).join('');
+
+    var win = document.createElement('div');
+    win.id = 'nv-wallpaper';
+    win.innerHTML =
+      '<div class="nv-wp-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red" data-act="close"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-aichat-title">Wallpaper</span>' +
+      '</div>' +
+      '<div class="nv-wp-grid">' + thumbsHtml + '</div>';
+    document.body.appendChild(win);
+
+    win.querySelector('[data-act="close"]').addEventListener('click', function () { win.remove(); });
+    makeWindowDraggable(win, win.querySelector('.nv-wp-header'));
+    win.querySelectorAll('.nv-wp-thumb').forEach(function (t) {
+      t.addEventListener('click', function () {
+        var url = t.getAttribute('data-url');
+        applyWallpaper(url);
+        NvCookie.set('nv_wallpaper', url);
+        win.querySelectorAll('.nv-wp-thumb').forEach(function (x) { x.classList.remove('nv-wp-selected'); });
+        t.classList.add('nv-wp-selected');
+      });
+    });
+  }
+
   // ─── AI chat (opens when AI desktop icon is clicked) ───
   function openAIChat() {
     var existing = document.getElementById('nv-aichat');
@@ -1350,7 +1397,7 @@
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
       { icon: '\uD83D\uDC19', label: 'GitHub' },
       { icon: '\uD83E\uDDE0', label: 'AI', action: openAIChat },
-      { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper' }
+      { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper', action: openWallpaperPicker }
     ];
     var grid = document.createElement('div');
     grid.id = 'nv-desktop-icons';
@@ -1463,6 +1510,10 @@
 
   // ─── Init ───
   function init() {
+    // Restore wallpaper from cookie (must run before paint to avoid flash)
+    var savedWp = NvCookie.get('nv_wallpaper');
+    if (savedWp) applyWallpaper(savedWp);
+
     // Apply theme: cookie > system preference > dark default
     var savedTheme = NvCookie.get('nv_theme');
     if (savedTheme === 'light') {

@@ -7,6 +7,9 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
 /* --- CSS Variables: Dark Mode (default) --- */
+:root {
+  --nv-wallpaper: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg');
+}
 :root, .nv-dark {
   --bg-color: rgba(32, 32, 42, 0.95);
   --bg-solid: #20202a;
@@ -74,7 +77,7 @@
 html, body {
   margin: 0 !important;
   padding: 0 !important;
-  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg') center/cover no-repeat fixed !important;
+  background: var(--nv-wallpaper) center/cover no-repeat fixed !important;
   color: var(--font-color);
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
@@ -84,7 +87,7 @@ html, body {
 }
 .nv-light,
 .nv-light body {
-  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg') center/cover no-repeat fixed !important;
+  background: var(--nv-wallpaper) center/cover no-repeat fixed !important;
 }
 
 /* --- Desktop icons --- */
@@ -375,6 +378,71 @@ html, body {
   30% { opacity: 1; }
 }
 .nv-mobile #nv-aichat { width: 95vw; height: 80vh; }
+
+/* --- Wallpaper picker (opens from Wallpaper icon) --- */
+#nv-wallpaper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(640px, 92vw);
+  height: min(480px, 75vh);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  background: #1f1f23;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 6px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  color: #ececec;
+  overflow: hidden;
+}
+.nv-wp-header {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #2a2a30, #1a1a20);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+}
+.nv-wp-header:active { cursor: grabbing; }
+.nv-wp-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
+.nv-wp-thumb {
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+  position: relative;
+  min-height: 120px;
+}
+.nv-wp-thumb:hover { transform: scale(1.02); border-color: rgba(155, 135, 245, 0.5); }
+.nv-wp-thumb.nv-wp-selected { border-color: #9b87f5; }
+.nv-wp-thumb.nv-wp-selected::after {
+  content: '✓';
+  position: absolute;
+  top: 6px; right: 8px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #9b87f5;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+}
+.nv-mobile #nv-wallpaper { width: 95vw; height: 80vh; }
 
 /* --- Filer app (Finder-like, opens from Projects icon) --- */
 #nv-filer {

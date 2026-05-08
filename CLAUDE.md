@@ -75,6 +75,7 @@ JS は init で以下を順に組み立てる:
 - `nv_config` — `{ mouse: bool }`
 - `nv_win` — minimized 時の `{x,y,w,h}`
 - `nv_386`, `nv_1984` — `on` / unset
+- `nv_wallpaper` — 背景壁紙の URL（Wallpaperアイコンで選択）
 
 `NvCookie.get/set` ヘルパーが先頭にある。新しい状態を増やすなら同じパターンで。
 
