@@ -1178,6 +1178,40 @@
     render();
   }
 
+  // ─── Books (opens when Books desktop icon is clicked) ───
+  var BOOKS = [
+    { img: 'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509022207_original.jpg', url: 'https://amzn.to/4nhUFmZ' },
+    { img: 'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509022443_original.jpg', url: 'https://amzn.to/4dxy6Y5' },
+    { img: 'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509022746_original.png', url: 'https://peaks.cc/books/wizard_bible_security' }
+  ];
+  function openBooks() {
+    var existing = document.getElementById('nv-books');
+    if (existing) { existing.style.display = 'flex'; return; }
+
+    var coversHtml = BOOKS.map(function (b) {
+      return '<a class="nv-books-item" href="' + b.url + '" target="_blank" rel="noopener">' +
+               '<img class="nv-books-cover" src="' + b.img + '" alt="">' +
+             '</a>';
+    }).join('');
+
+    var win = document.createElement('div');
+    win.id = 'nv-books';
+    win.innerHTML =
+      '<div class="nv-books-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red" data-act="close"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-aichat-title">Books</span>' +
+      '</div>' +
+      '<div class="nv-books-grid">' + coversHtml + '</div>';
+    document.body.appendChild(win);
+
+    win.querySelector('[data-act="close"]').addEventListener('click', function () { win.remove(); });
+    makeWindowDraggable(win, win.querySelector('.nv-books-header'));
+  }
+
   // ─── Wallpaper (opens when Wallpaper desktop icon is clicked) ───
   var WALLPAPERS = [
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg',
@@ -1437,6 +1471,7 @@
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
       { icon: '\uD83E\uDDE0', label: 'AI', action: openAIChat },
+      { icon: '\uD83D\uDCDA', label: 'Books', action: openBooks },
       { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper', action: openWallpaperPicker }
     ];
     var grid = document.createElement('div');

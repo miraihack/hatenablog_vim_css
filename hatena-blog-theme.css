@@ -469,6 +469,64 @@ html, body {
 }
 .nv-mobile #nv-wallpaper { width: 95vw; height: 80vh; }
 
+/* --- Books picker (opens from Books icon) --- */
+#nv-books {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 92vw);
+  height: min(520px, 80vh);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  background: #1f1f23;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 6px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  color: #ececec;
+  overflow: hidden;
+}
+.nv-books-header {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #2a2a30, #1a1a20);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+}
+.nv-books-header:active { cursor: grabbing; }
+.nv-books-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  align-items: start;
+}
+.nv-books-item {
+  display: block;
+  text-decoration: none;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nv-books-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+.nv-books-cover {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+.nv-mobile #nv-books { width: 95vw; height: 80vh; }
+.nv-mobile .nv-books-grid { grid-template-columns: repeat(2, 1fr); }
+
 /* --- Filer app (Finder-like, opens from Projects icon) --- */
 #nv-filer {
   position: fixed;
