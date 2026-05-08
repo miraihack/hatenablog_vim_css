@@ -395,7 +395,9 @@
       var html =
         '<a class="nv-share-btn nv-share-hatena" href="https://b.hatena.ne.jp/entry/s/' + entryHost + entryPath + '" target="_blank" rel="noopener">B! ブックマーク</a>' +
         '<a class="nv-share-btn nv-share-x" href="https://x.com/intent/tweet?url=' + url + '&text=' + titleEnc + '" target="_blank" rel="noopener">𝕏 ポスト</a>' +
-        '<a class="nv-share-btn nv-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">f シェア</a>';
+        '<a class="nv-share-btn nv-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">f シェア</a>' +
+        '<a class="nv-share-btn nv-share-rss" href="https://hatebu.jp/feed" target="_blank" rel="noopener">📡 RSS</a>' +
+        '<a class="nv-share-btn nv-share-subscribe" href="https://blog.hatena.ne.jp/-/subscribe?canonical_uri=' + encodeURIComponent('https://hatebu.jp/') + '" target="_blank" rel="noopener">＋ 読者になる</a>';
 
       if (header) {
         var top = document.createElement('div');

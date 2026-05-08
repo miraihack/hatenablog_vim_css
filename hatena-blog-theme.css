@@ -1256,6 +1256,14 @@ a:visited { color: var(--blue); }
   background-color: #1877F2;
   color: #fff !important;
 }
+.nv-share-rss {
+  background-color: #ee802f;
+  color: #fff !important;
+}
+.nv-share-subscribe {
+  background-color: #de4d40;
+  color: #fff !important;
+}
 
 /* Article-end share buttons */
 .nv-entry-share {
