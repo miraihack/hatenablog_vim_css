@@ -74,7 +74,7 @@
 html, body {
   margin: 0 !important;
   padding: 0 !important;
-  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260330/20260330190302_original.jpg') center/cover no-repeat fixed !important;
+  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg') center/cover no-repeat fixed !important;
   color: var(--font-color);
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
@@ -84,7 +84,7 @@ html, body {
 }
 .nv-light,
 .nv-light body {
-  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260330/20260330190302_original.jpg') center/cover no-repeat fixed !important;
+  background: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg') center/cover no-repeat fixed !important;
 }
 
 /* --- Desktop icons --- */
@@ -136,6 +136,190 @@ html, body {
 }
 .nv-mobile #nv-desktop-icons { display: none !important; }
 
+/* --- Terminal app (opens from desktop icon) --- */
+#nv-terminal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 90vw);
+  height: min(480px, 70vh);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  background: #1a1a24;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 6px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  color: #e0e0ee;
+  overflow: hidden;
+}
+.nv-terminal-header {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #3d3d50, #2a2a38);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+}
+.nv-terminal-header:active { cursor: grabbing; }
+.nv-terminal-lights {
+  display: inline-flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+.nv-terminal-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.nv-terminal-light-red    { background: #ff5f57; }
+.nv-terminal-light-yellow { background: #febc2e; }
+.nv-terminal-light-green  { background: #28c840; }
+.nv-terminal-title {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  margin-right: 60px;
+}
+.nv-terminal-body {
+  flex: 1;
+  padding: 8px 12px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: text;
+}
+.nv-terminal-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.nv-terminal-prompt { color: #82aaff; }
+.nv-terminal-user { color: #c3e88d; }
+.nv-terminal-tilde { color: #ffc777; }
+.nv-terminal-input-line {
+  display: flex;
+  align-items: center;
+}
+.nv-terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  caret-color: #e0e0ee;
+}
+.nv-mobile #nv-terminal { width: 95vw; height: 75vh; }
+
+/* --- Filer app (Finder-like, opens from Projects icon) --- */
+#nv-filer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 90vw);
+  height: min(520px, 75vh);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  background: #2a2a38;
+  border-radius: 10px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 6px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  color: #e0e0ee;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.nv-filer-header {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #3d3d50, #2a2a38);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.nv-filer-header:active { cursor: grabbing; }
+.nv-filer-back {
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 18px;
+  color: #aaa;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.nv-filer-back:hover { background: rgba(255, 255, 255, 0.1); color: #82aaff; }
+.nv-filer-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: #ddd;
+  margin-right: 60px;
+  font-weight: bold;
+}
+.nv-filer-path {
+  padding: 4px 12px;
+  font-size: 11px;
+  color: #888;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.nv-filer-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 4px;
+  padding: 12px;
+  overflow-y: auto;
+  align-content: start;
+}
+.nv-filer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+}
+.nv-filer-item:hover { background: rgba(255, 255, 255, 0.08); }
+.nv-filer-item:active { background: rgba(130, 170, 255, 0.25); }
+.nv-filer-icon { font-size: 36px; line-height: 1; }
+.nv-filer-name {
+  font-size: 11px;
+  margin-top: 6px;
+  word-break: break-all;
+  line-height: 1.2;
+}
+.nv-filer-statusbar {
+  padding: 4px 12px;
+  font-size: 10px;
+  color: #777;
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.nv-filer-grid.nv-filer-preview {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #cdd6f4;
+  background: rgba(0, 0, 0, 0.2);
+}
+.nv-mobile #nv-filer { width: 95vw; height: 80vh; }
+
 a { color: var(--blue); text-decoration: none; }
 a:hover { background-color: var(--selection); }
 a:visited { color: var(--blue); }
@@ -160,10 +344,10 @@ a:visited { color: var(--blue); }
 }
 #container-inner {
   position: fixed !important;
-  top: 10vh;
-  bottom: 10vh;
-  left: 10vw;
-  right: 10vw;
+  top: 3vh;
+  bottom: 3vh;
+  left: 3vw;
+  right: 3vw;
   cursor: default;
   margin: 0 !important;
   padding: 0 !important;
@@ -188,9 +372,9 @@ a:visited { color: var(--blue); }
 /* --- Blog Header + Tab Bar: Fixed, aligned to container --- */
 #nv-topbar {
   position: fixed !important;
-  top: 10vh;
-  left: 10vw;
-  right: 10vw;
+  top: 3vh;
+  left: 3vw;
+  right: 3vw;
   z-index: 99999;
   background-color: var(--bg-solid);
   border-bottom: 1px solid rgba(205, 214, 244, 0.1);
@@ -734,9 +918,9 @@ a:visited { color: var(--blue); }
    ============================================ */
 .nv-prompt {
   position: fixed !important;
-  bottom: 10vh;
-  left: 10vw;
-  right: 10vw;
+  bottom: 3vh;
+  left: 3vw;
+  right: 3vw;
   height: 40px;
   z-index: 99999;
   background-color: var(--bg-solid);
@@ -820,6 +1004,18 @@ a:visited { color: var(--blue); }
 .nv-share-fb {
   background-color: #1877F2;
   color: #fff !important;
+}
+
+/* Article-end share buttons */
+.nv-entry-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2em 0 1em;
+}
+.nv-entry-share .nv-share-btn {
+  font-size: 0.9em;
+  padding: 6px 14px;
 }
 
 /* ============================================

@@ -192,10 +192,23 @@
       if (!isMobile()) toggleMinimized();
     });
 
-    // Green: toggle fullscreen (hide header/footer)
+    // Green: PC = browser fullscreen (window stays centered, background visible);
+    //        mobile = toggle nv-fullscreen class (hide bars only)
     lights.querySelector('.nv-light-green').addEventListener('click', function (e) {
       e.stopPropagation();
-      document.documentElement.classList.toggle('nv-fullscreen');
+      if (isMobile()) {
+        document.documentElement.classList.toggle('nv-fullscreen');
+        return;
+      }
+      var docEl = document.documentElement;
+      var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+      if (!fsEl) {
+        var req = docEl.requestFullscreen || docEl.webkitRequestFullscreen;
+        if (req) req.call(docEl);
+      } else {
+        var exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) exit.call(document);
+      }
     });
 
     var titleLink = blogTitle.querySelector('#title a');
@@ -205,7 +218,7 @@
     if (titleLink) {
       var a = document.createElement('a');
       a.href = titleLink.href;
-      a.textContent = 'Terminal NeoVim';
+      a.textContent = isMobile() ? 'NeoVim' : 'Terminal NeoVim';
       titleDiv.appendChild(a);
     }
     // Theme toggle (switch + label, sits right next to title)
@@ -358,6 +371,35 @@
       '<label for="nv-setter" id="nv-writer">&nbsp;</label>' +
       '<b class="nv-cursor" id="nv-cursor"></b>';
     document.body.appendChild(prompt);
+  }
+
+  // ─── Article-end share buttons (one set per .entry) ───
+  function buildEntryShareButtons() {
+    document.querySelectorAll('.entry').forEach(function (entry) {
+      if (entry.querySelector('.nv-entry-share')) return;
+      var titleEl = entry.querySelector('.entry-title a');
+      var content = entry.querySelector('.entry-content');
+      if (!titleEl || !content) return;
+
+      var resolver = document.createElement('a');
+      resolver.href = titleEl.getAttribute('href') || '';
+      var entryUrl = resolver.href;
+      var entryHost = resolver.host;
+      var entryPath = resolver.pathname;
+      var title = titleEl.textContent.trim();
+
+      var url = encodeURIComponent(entryUrl);
+      var titleEnc = encodeURIComponent(title);
+
+      var share = document.createElement('div');
+      share.className = 'nv-entry-share';
+      share.innerHTML =
+        '<a class="nv-share-btn nv-share-hatena" href="https://b.hatena.ne.jp/entry/s/' + entryHost + entryPath + '" target="_blank" rel="noopener">B! ブックマーク</a>' +
+        '<a class="nv-share-btn nv-share-x" href="https://x.com/intent/tweet?url=' + url + '&text=' + titleEnc + '" target="_blank" rel="noopener">𝕏 ポスト</a>' +
+        '<a class="nv-share-btn nv-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">f シェア</a>';
+
+      content.parentNode.insertBefore(share, content.nextSibling);
+    });
   }
 
   // ─── Setup content links ───
@@ -838,11 +880,298 @@
     lastContent.appendChild(cursorBlock);
   }
 
+  // ─── Window helpers (shared by Terminal, Filer) ───
+  function makeWindowDraggable(win, header) {
+    var dragging = false, dx = 0, dy = 0;
+    header.addEventListener('mousedown', function (e) {
+      if (e.target.classList.contains('nv-terminal-light')) return;
+      dragging = true;
+      var rect = win.getBoundingClientRect();
+      dx = e.clientX - rect.left;
+      dy = e.clientY - rect.top;
+      win.style.transform = 'none';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function (e) {
+      if (!dragging) return;
+      win.style.left = (e.clientX - dx) + 'px';
+      win.style.top = (e.clientY - dy) + 'px';
+    });
+    document.addEventListener('mouseup', function () { dragging = false; });
+  }
+
+  // ─── Terminal app (opens when Terminal desktop icon is clicked) ───
+  function openTerminal() {
+    var existing = document.getElementById('nv-terminal');
+    if (existing) {
+      existing.style.display = 'flex';
+      var inp0 = existing.querySelector('.nv-terminal-input');
+      if (inp0) inp0.focus();
+      return;
+    }
+
+    var term = document.createElement('div');
+    term.id = 'nv-terminal';
+    var promptHtml = '<span class="nv-terminal-prompt"><span class="nv-terminal-user">saito@hatebu</span> <span class="nv-terminal-tilde">~</span> %&nbsp;</span>';
+    term.innerHTML =
+      '<div class="nv-terminal-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-terminal-title">saito@hatebu: ~ — zsh</span>' +
+      '</div>' +
+      '<div class="nv-terminal-body">' +
+        '<div class="nv-terminal-output"></div>' +
+        '<div class="nv-terminal-input-line">' +
+          promptHtml +
+          '<input class="nv-terminal-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(term);
+
+    var output = term.querySelector('.nv-terminal-output');
+    var input = term.querySelector('.nv-terminal-input');
+    var body = term.querySelector('.nv-terminal-body');
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, function (c) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+      });
+    }
+    function appendOutput(text) {
+      var line = document.createElement('div');
+      line.className = 'nv-terminal-line';
+      line.textContent = text;
+      output.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+    }
+    function appendPrompt(cmd) {
+      var line = document.createElement('div');
+      line.className = 'nv-terminal-line';
+      line.innerHTML = promptHtml + escapeHtml(cmd);
+      output.appendChild(line);
+    }
+
+    appendOutput('Last login: ' + new Date().toString().slice(0, 24) + ' on ttys000');
+    appendOutput('Type `help` to list commands.');
+
+    var COMMANDS = {
+      help: function () { return 'Commands: help, ls, pwd, whoami, date, cat <file>, echo <text>, vim, nvim, neofetch, clear, exit'; },
+      ls: function () { return 'Projects/    Linux/    .ssh/    .vimrc    node_modules/\nbrew/        GitHub/   AI/      Makefile  wallpaper.jpg  lo-fi.mp3'; },
+      pwd: function () { return '/Users/saito'; },
+      whoami: function () { return 'saito'; },
+      date: function () { return new Date().toString(); },
+      vim: function () { return 'E492: Not an editor command: vim. Use Neovim btw.'; },
+      nvim: function () { return '...you are already inside one.'; },
+      neofetch: function () {
+        var theme = document.documentElement.classList.contains('nv-light') ? 'Light' : 'Dark';
+        var ua = (navigator.userAgent.match(/Chrome|Safari|Firefox|Edge/) || ['?'])[0];
+        return [
+          '       ████████        saito@hatebu',
+          '     ███▓▓▓▓▓▓███      ------------',
+          '    ██▓▓██████▓▓██     OS: Hatena Blog Linux',
+          '   ██▓▓██████████▓▓██  Shell: zsh',
+          '  ██▓▓██████████▓▓██   Editor: Neovim',
+          '  ██▓▓██████████▓▓██   Theme: ' + theme,
+          '   ██▓▓██████████▓▓██  Browser: ' + ua,
+          '    ██▓▓██████▓▓██     Resolution: ' + screen.width + 'x' + screen.height,
+          '     ███▓▓▓▓▓▓███      Uptime: just now',
+          '       ████████'
+        ].join('\n');
+      },
+      clear: function () { output.innerHTML = ''; return null; },
+      exit: function () { term.remove(); return null; }
+    };
+
+    function exec(line) {
+      var trimmed = line.trim();
+      appendPrompt(line);
+      if (!trimmed) return;
+      var parts = trimmed.split(/\s+/);
+      var cmd = parts[0], args = parts.slice(1);
+      if (cmd === 'echo') { appendOutput(args.join(' ')); return; }
+      if (cmd === 'cat') {
+        var name = args[0] || '';
+        if (name === '.vimrc') {
+          appendOutput([
+            'set number relativenumber',
+            'set tabstop=2 shiftwidth=2 expandtab',
+            'set termguicolors',
+            'colorscheme catppuccin',
+            'lua require("config.lazy")'
+          ].join('\n'));
+        } else {
+          appendOutput('cat: ' + (name || '(no file)') + ': No such file or directory');
+        }
+        return;
+      }
+      var fn = COMMANDS[cmd];
+      if (fn) {
+        var out = fn();
+        if (out !== null && out !== undefined) appendOutput(out);
+      } else {
+        appendOutput('zsh: command not found: ' + cmd);
+      }
+    }
+
+    var history = [], hIdx = 0;
+    input.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        var line = input.value;
+        if (line.trim()) { history.push(line); hIdx = history.length; }
+        exec(line);
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (hIdx > 0) { hIdx--; input.value = history[hIdx]; }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (hIdx < history.length - 1) { hIdx++; input.value = history[hIdx]; }
+        else { hIdx = history.length; input.value = ''; }
+      } else if (e.key === 'l' && e.ctrlKey) {
+        e.preventDefault();
+        output.innerHTML = '';
+      }
+    });
+
+    body.addEventListener('click', function () { input.focus(); });
+
+    term.querySelector('.nv-terminal-light-red').addEventListener('click', function (e) {
+      e.stopPropagation();
+      term.remove();
+    });
+
+    makeWindowDraggable(term, term.querySelector('.nv-terminal-header'));
+
+    input.focus();
+  }
+
+  // ─── Filer app (Finder-like, opens when Projects desktop icon is clicked) ───
+  var PROJECTS_TREE = {
+    type: 'dir', children: {
+      'README.md': { type: 'file', content: '# Projects\n\nMy random side projects.\nDouble-click folders to enter, files to preview.' },
+      'neovim-theme': { type: 'dir', children: {
+        'README.md': { type: 'file', content: '# Neovim Theme for Hatena Blog\n\nThis very theme. Catppuccin/Moonlight palette + Vim keybindings.' },
+        'hatena-blog-theme.css': { type: 'file', content: '/* CSS variables for dark/light, fixed-position window layout, mode-specific overrides. */' },
+        'hatena-blog-neovim.js': { type: 'file', content: '// Single IIFE. init() builds tab bar, file browser, prompt bar.\n// Cookie-based state for theme/tabs/window position.' },
+        'package.json': { type: 'file', content: '{\n  "name": "neovim-theme",\n  "license": "MIT",\n  "scripts": {\n    "build": "terser ... && clean-css-cli ..."\n  }\n}' }
+      } },
+      'dotfiles': { type: 'dir', children: {
+        '.zshrc': { type: 'file', content: 'export EDITOR=nvim\nexport PATH=$HOME/.local/bin:$PATH\nalias g=git\nalias v=nvim' },
+        '.vimrc': { type: 'file', content: 'set number relativenumber\nset tabstop=2 shiftwidth=2 expandtab\nset termguicolors\ncolorscheme catppuccin' },
+        'nvim': { type: 'dir', children: {
+          'init.lua': { type: 'file', content: 'require("config.lazy")\nrequire("config.options")\nrequire("config.keymaps")\nrequire("config.autocmds")' }
+        } }
+      } },
+      'notes': { type: 'dir', children: {
+        '2026-04-20.md': { type: 'file', content: '# 2026-04-20\n\n- Refactored window layout to use position:fixed everywhere\n- Fixed alignment bug between topbar and prompt' },
+        '2026-05-01.md': { type: 'file', content: '# 2026-05-01\n\n- Added Terminal gimmick to desktop icons\n- Considering Finder-like app for Projects' }
+      } },
+      'TODO.txt': { type: 'file', content: '[x] Fullscreen with green button\n[x] Terminal gimmick\n[x] Filer gimmick\n[ ] Music player gimmick (lo-fi.mp3?)\n[ ] Settings panel' },
+      '.git': { type: 'dir', children: {
+        'HEAD': { type: 'file', content: 'ref: refs/heads/main' },
+        'config': { type: 'file', content: '[core]\n  bare = false\n[remote "origin"]\n  url = git@github.com:saito/neovim-theme.git' }
+      } }
+    }
+  };
+
+  function openFiler(title, tree) {
+    var existing = document.getElementById('nv-filer');
+    if (existing) { existing.remove(); }
+
+    var win = document.createElement('div');
+    win.id = 'nv-filer';
+    win.innerHTML =
+      '<div class="nv-filer-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-filer-back" title="Back">‹</span>' +
+        '<span class="nv-filer-title"></span>' +
+      '</div>' +
+      '<div class="nv-filer-path"></div>' +
+      '<div class="nv-filer-grid"></div>' +
+      '<div class="nv-filer-statusbar"></div>';
+    document.body.appendChild(win);
+
+    var titleEl = win.querySelector('.nv-filer-title');
+    var pathEl = win.querySelector('.nv-filer-path');
+    var gridEl = win.querySelector('.nv-filer-grid');
+    var statusEl = win.querySelector('.nv-filer-statusbar');
+    var backEl = win.querySelector('.nv-filer-back');
+    var stack = [{ name: title, node: tree }];
+    var previewing = false;
+
+    function iconFor(name, node) {
+      if (node.type === 'dir') return name === '.git' ? '🗄️' : '📁';
+      if (/\.(md|txt)$/.test(name)) return '📝';
+      if (/\.(css|scss)$/.test(name)) return '🎨';
+      if (/\.(js|ts|lua|rb|py)$/.test(name)) return '📜';
+      if (/\.(json|toml|yaml|yml)$/.test(name)) return '⚙️';
+      if (/^\.[a-z]/.test(name)) return '🔧';
+      return '📄';
+    }
+
+    function render() {
+      previewing = false;
+      var current = stack[stack.length - 1].node;
+      titleEl.textContent = stack[stack.length - 1].name;
+      pathEl.textContent = stack.map(function (s) { return s.name; }).join(' › ');
+      backEl.style.opacity = stack.length > 1 ? '1' : '0.3';
+      gridEl.className = 'nv-filer-grid';
+      gridEl.innerHTML = '';
+      var names = Object.keys(current.children || {});
+      names.forEach(function (name) {
+        var node = current.children[name];
+        var el = document.createElement('div');
+        el.className = 'nv-filer-item';
+        el.innerHTML = '<span class="nv-filer-icon">' + iconFor(name, node) + '</span><span class="nv-filer-name"></span>';
+        el.querySelector('.nv-filer-name').textContent = name;
+        el.addEventListener('dblclick', function () {
+          if (node.type === 'dir') { stack.push({ name: name, node: node }); render(); }
+          else { showPreview(name, node); }
+        });
+        gridEl.appendChild(el);
+      });
+      statusEl.textContent = names.length + ' item' + (names.length === 1 ? '' : 's');
+    }
+
+    function showPreview(name, node) {
+      previewing = true;
+      titleEl.textContent = name;
+      backEl.style.opacity = '1';
+      gridEl.className = 'nv-filer-grid nv-filer-preview';
+      gridEl.textContent = node.content || '(empty file)';
+      statusEl.textContent = (node.content ? node.content.length : 0) + ' bytes';
+    }
+
+    backEl.addEventListener('click', function () {
+      if (previewing) { render(); return; }
+      if (stack.length > 1) { stack.pop(); render(); }
+    });
+
+    win.querySelector('.nv-terminal-light-red').addEventListener('click', function (e) {
+      e.stopPropagation();
+      win.remove();
+    });
+
+    makeWindowDraggable(win, win.querySelector('.nv-filer-header'));
+
+    render();
+  }
+
   // ─── Desktop icons ───
   function buildDesktopIcons() {
     var icons = [
-      { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal' },
-      { icon: '\uD83D\uDCC1', label: 'Projects' },
+      { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal', action: openTerminal },
+      { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux' },
       { icon: '\uD83D\uDD12', label: '.ssh' },
       { icon: '\uD83D\uDCC4', label: '.vimrc' },
@@ -860,6 +1189,10 @@
       var el = document.createElement('div');
       el.className = 'nv-desk-icon';
       el.innerHTML = '<span class="nv-desk-emoji">' + item.icon + '</span><span class="nv-desk-label">' + item.label + '</span>';
+      if (item.action) {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', item.action);
+      }
       grid.appendChild(el);
     });
     document.body.appendChild(grid);
@@ -1002,6 +1335,7 @@
     buildTabBar();
     buildPromptBar();
     setupContentLinks();
+    buildEntryShareButtons();
 
     // Desktop: apply saved window position (after UI is built)
     if (!isMobile()) {
