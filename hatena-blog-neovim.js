@@ -1205,6 +1205,7 @@
         '</span>' +
         '<span class="nv-aichat-title">Books</span>' +
       '</div>' +
+      '<div class="nv-books-heading">サイバーメガネの著書</div>' +
       '<div class="nv-books-grid">' + coversHtml + '</div>';
     document.body.appendChild(win);
 

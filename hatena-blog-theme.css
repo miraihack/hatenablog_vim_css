@@ -498,6 +498,14 @@ html, body {
   user-select: none;
 }
 .nv-books-header:active { cursor: grabbing; }
+.nv-books-heading {
+  flex-shrink: 0;
+  padding: 16px 20px 0;
+  font-size: 15px;
+  font-weight: bold;
+  color: #ececec;
+  letter-spacing: 0.05em;
+}
 .nv-books-grid {
   flex: 1;
   display: grid;
