@@ -139,6 +139,13 @@ html, body {
 }
 .nv-mobile #nv-desktop-icons { display: none !important; }
 
+/* Blog window hide/show: red traffic light hides, Blog desktop icon restores */
+.nv-window-hidden #nv-topbar,
+.nv-window-hidden #container-inner,
+.nv-window-hidden .nv-prompt {
+  display: none !important;
+}
+
 /* --- Terminal app (opens from desktop icon) --- */
 #nv-terminal {
   position: fixed;

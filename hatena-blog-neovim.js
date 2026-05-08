@@ -180,10 +180,14 @@
     lights.id = 'nv-traffic-lights';
     lights.innerHTML = '<span class="nv-light-red"></span><span class="nv-light-yellow"></span><span class="nv-light-green"></span>';
 
-    // Red: show Vim Uganda message
+    // Red: hide blog window on desktop (Blog icon restores it); Uganda splash on mobile
     lights.querySelector('.nv-light-red').addEventListener('click', function (e) {
       e.stopPropagation();
-      showUganda();
+      if (isMobile()) {
+        showUganda();
+      } else {
+        document.documentElement.classList.add('nv-window-hidden');
+      }
     });
 
     // Yellow: toggle minimized (small window) mode — desktop only
@@ -1468,6 +1472,7 @@
   // ─── Desktop icons ───
   function buildDesktopIcons() {
     var icons = [
+      { icon: '\uD83D\uDCDD', label: 'Blog', action: function () { document.documentElement.classList.remove('nv-window-hidden'); } },
       { icon: '\uD83D\uDDA5\uFE0F', label: 'Terminal', action: openTerminal },
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
