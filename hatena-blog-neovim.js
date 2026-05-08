@@ -1172,7 +1172,7 @@
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260508/20260508073141_original.jpg',
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509013601_original.jpg',
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014154_original.jpg',
-    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014229_original.jpg',
+    'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509015658_original.png',
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014334_original.jpg',
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014811_original.jpg'
   ];
