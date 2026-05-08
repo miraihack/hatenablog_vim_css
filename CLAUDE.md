@@ -8,25 +8,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ビルド
 
-ソース (`hatena-blog-theme.css`, `hatena-blog-neovim.js`) を編集したら、必ず `hatena-blog-neovim-hatena.html` を再生成すること。本番のはてなブログはこの結合HTMLしか読まない。ソースだけ更新しても本番には反映されないので、確認のたびに混乱する。
+ソース (`hatena-blog-theme.css`, `hatena-blog-neovim.js`) を編集したら、必ず3つの成果物を再生成すること。本番のはてなブログはこれらを参照し、ソースは見ない。
+
+成果物:
+- `hatena-blog-theme.min.css` — minify後のCSSを `<style>...</style>` で囲んだもの（はてなブログにそのまま貼り付け）
+- `hatena-blog-neovim.min.js` — minify後のJSを `<script>...</script>` で囲んだもの（同上）
+- `hatena-blog-neovim-hatena.html` — 上2つを連結した64KB制限対応版
+
+**注意**: `.min.css` / `.min.js` は文法上は不正（CSS/JSファイル内にHTMLタグが混入）だが、はてなブログのカスタムHTML欄に貼り付ける都合でこの形にしている。
 
 ```bash
-# minify
+# minify (ソース → 一時ファイル)
 npx terser hatena-blog-neovim.js -c -m --output /tmp/nv-min.js
 npx clean-css-cli hatena-blog-theme.css -o /tmp/nv-min.css
 
-# 結合
+# .min.css をタグで囲む
 { echo '<style>'; \
   echo '@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");'; \
   cat /tmp/nv-min.css; \
   echo '</style>'; \
-  echo '<script>'; \
+} > hatena-blog-theme.min.css
+
+# .min.js をタグで囲む
+{ echo '<script>'; \
   cat /tmp/nv-min.js; \
   echo '</script>'; \
-} > hatena-blog-neovim-hatena.html
+} > hatena-blog-neovim.min.js
+
+# 結合HTML（タグ付き2ファイルを単純連結）
+cat hatena-blog-theme.min.css hatena-blog-neovim.min.js > hatena-blog-neovim-hatena.html
 ```
 
-**重要なサイズ制約**: はてなブログのカスタムHTML欄は **約64KB** が上限。minify 後のサイズに常に注意する。新機能追加時は `wc -c hatena-blog-neovim-hatena.html` で確認。
+**重要なサイズ制約**: はてなブログのカスタムHTML欄は **約64KB** が上限。`hatena-blog-neovim-hatena.html` のサイズに常に注意する（`.min.css` / `.min.js` を別アップする運用なら個別に64KB以内）。`wc -c hatena-blog-neovim-hatena.html` で確認。
 
 ## ローカル開発
 
