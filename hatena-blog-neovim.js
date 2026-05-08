@@ -1167,6 +1167,91 @@
     render();
   }
 
+  // ─── AI chat (opens when AI desktop icon is clicked) ───
+  function openAIChat() {
+    var existing = document.getElementById('nv-aichat');
+    if (existing) { existing.style.display = 'flex'; return; }
+
+    var win = document.createElement('div');
+    win.id = 'nv-aichat';
+    win.innerHTML =
+      '<div class="nv-aichat-header">' +
+        '<span class="nv-terminal-lights">' +
+          '<span class="nv-terminal-light nv-terminal-light-red" data-act="close"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-yellow"></span>' +
+          '<span class="nv-terminal-light nv-terminal-light-green"></span>' +
+        '</span>' +
+        '<span class="nv-aichat-title">Hatebu AI</span>' +
+      '</div>' +
+      '<div class="nv-aichat-body"></div>';
+    document.body.appendChild(win);
+
+    var body = win.querySelector('.nv-aichat-body');
+    win.querySelector('[data-act="close"]').addEventListener('click', function () { win.remove(); });
+    makeWindowDraggable(win, win.querySelector('.nv-aichat-header'));
+
+    var script = [
+      { role: 'user', text: 'このブログについて教えてください' },
+      { role: 'ai',   text: 'このブログは「Terminal NeoVim」というカスタムテーマで装飾されたはてなブログです。Vim / Neovim 風の UI を再現しており、トップバー・タブバー・左サイドのファイルブラウザ・下部のステータスラインを備えています。記事を読みながらエディタの中にいるような体験を目指しました。' },
+      { role: 'user', text: 'どんな機能がありますか？' },
+      { role: 'ai',   text: '主な機能は以下です：\n• Vim 風キーバインド（j / k で選択、/ で検索、:q で戻る）\n• トラフィックライトでスプラッシュ / ミニマイズ / フルスクリーン切替\n• Catppuccin・Moonlight ベースのダーク / ライトテーマ\n• レトロ DOS 風「386 モード」とディストピア「1984 モード」\n• モバイルではスワイプでファイルブラウザを呼び出し可能' },
+      { role: 'user', text: '開発者は誰ですか？' },
+      { role: 'ai',   text: 'saito@hatebu さんです。GitHub の miraihack 名義でテーマを開発・公開しています。フィードバックや要望は、記事のコメント欄やはてなブックマークからどうぞ。' }
+    ];
+
+    function addBubble(role) {
+      var wrap = document.createElement('div');
+      wrap.className = 'nv-aichat-row nv-aichat-' + role;
+      wrap.innerHTML = (role === 'ai' ? '<span class="nv-aichat-avatar">AI</span>' : '') +
+                       '<div class="nv-aichat-bubble"></div>';
+      body.appendChild(wrap);
+      body.scrollTop = body.scrollHeight;
+      return wrap.querySelector('.nv-aichat-bubble');
+    }
+    function showTyping(cb) {
+      var wrap = document.createElement('div');
+      wrap.className = 'nv-aichat-row nv-aichat-ai';
+      wrap.innerHTML = '<span class="nv-aichat-avatar">AI</span><div class="nv-aichat-bubble nv-aichat-typing"><span></span><span></span><span></span></div>';
+      body.appendChild(wrap);
+      body.scrollTop = body.scrollHeight;
+      setTimeout(function () {
+        if (!document.body.contains(win)) return;
+        wrap.remove();
+        cb();
+      }, 900);
+    }
+    function typeInto(bubble, text, speed, done) {
+      var i = 0;
+      function step() {
+        if (!document.body.contains(win)) return;
+        bubble.textContent = text.slice(0, ++i);
+        body.scrollTop = body.scrollHeight;
+        if (i < text.length) {
+          setTimeout(step, speed + Math.random() * speed);
+        } else if (done) {
+          setTimeout(done, 600);
+        }
+      }
+      step();
+    }
+
+    var idx = 0;
+    function next() {
+      if (idx >= script.length || !document.body.contains(win)) return;
+      var step = script[idx++];
+      if (step.role === 'user') {
+        var b = addBubble('user');
+        typeInto(b, step.text, 35, next);
+      } else {
+        showTyping(function () {
+          var b = addBubble('ai');
+          typeInto(b, step.text, 18, next);
+        });
+      }
+    }
+    setTimeout(next, 400);
+  }
+
   // ─── Linux boot screen (opens when Linux desktop icon is clicked) ───
   function openLinuxBoot() {
     var existing = document.getElementById('nv-linux-boot');
@@ -1264,7 +1349,7 @@
       { icon: '\uD83D\uDCC1', label: 'Projects', action: function () { openFiler('Projects', PROJECTS_TREE); } },
       { icon: '\uD83D\uDC27', label: 'Linux', action: openLinuxBoot },
       { icon: '\uD83D\uDC19', label: 'GitHub' },
-      { icon: '\uD83E\uDDE0', label: 'AI' },
+      { icon: '\uD83E\uDDE0', label: 'AI', action: openAIChat },
       { icon: '\uD83D\uDDBC\uFE0F', label: 'Wallpaper' }
     ];
     var grid = document.createElement('div');
