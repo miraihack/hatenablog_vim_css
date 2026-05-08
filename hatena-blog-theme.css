@@ -1318,12 +1318,18 @@ a:visited { color: var(--blue); }
   white-space: nowrap;
   text-decoration: none !important;
   cursor: pointer;
-  transition: opacity 0.15s;
 }
-.nv-share-btn:hover {
-  opacity: 0.8;
-  background-color: transparent !important;
+.nv-share-btn,
+.nv-share-btn:hover,
+.nv-share-btn:focus,
+.nv-share-btn:visited {
+  opacity: 1;
 }
+.nv-share-hatena, .nv-share-hatena:hover { background-color: #00A4DE !important; color: #fff !important; }
+.nv-share-x, .nv-share-x:hover { background-color: #000 !important; color: #fff !important; }
+.nv-share-fb, .nv-share-fb:hover { background-color: #1877F2 !important; color: #fff !important; }
+.nv-share-rss, .nv-share-rss:hover { background-color: #ee802f !important; color: #fff !important; }
+.nv-share-subscribe, .nv-share-subscribe:hover { background-color: #de4d40 !important; color: #fff !important; }
 .nv-insert-buttons iframe {
   height: 28px;
   vertical-align: middle;
