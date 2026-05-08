@@ -1094,6 +1094,8 @@ a:visited { color: var(--blue); }
 
 .entry-content h1,
 .entry-content h1::before { color: var(--blue); }
+.entry-content h1 { font-size: 1.6em; }
+.entry-content h2 { font-size: 1.45em; }
 .entry-content h2,
 .entry-content h2::before { color: var(--yellow); }
 .entry-content h3,
