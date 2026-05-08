@@ -1264,6 +1264,9 @@ a:visited { color: var(--blue); }
   gap: 8px;
   margin: 2em 0 1em;
 }
+.nv-entry-share-top {
+  margin: 0.6em 0 1.2em;
+}
 .nv-entry-share .nv-share-btn {
   font-size: 0.9em;
   padding: 6px 14px;

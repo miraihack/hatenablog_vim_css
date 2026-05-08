@@ -379,6 +379,7 @@
       if (entry.querySelector('.nv-entry-share')) return;
       var titleEl = entry.querySelector('.entry-title a');
       var content = entry.querySelector('.entry-content');
+      var header = entry.querySelector('.entry-header');
       if (!titleEl || !content) return;
 
       var resolver = document.createElement('a');
@@ -391,14 +392,22 @@
       var url = encodeURIComponent(entryUrl);
       var titleEnc = encodeURIComponent(title);
 
-      var share = document.createElement('div');
-      share.className = 'nv-entry-share';
-      share.innerHTML =
+      var html =
         '<a class="nv-share-btn nv-share-hatena" href="https://b.hatena.ne.jp/entry/s/' + entryHost + entryPath + '" target="_blank" rel="noopener">B! ブックマーク</a>' +
         '<a class="nv-share-btn nv-share-x" href="https://x.com/intent/tweet?url=' + url + '&text=' + titleEnc + '" target="_blank" rel="noopener">𝕏 ポスト</a>' +
         '<a class="nv-share-btn nv-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">f シェア</a>';
 
-      content.parentNode.insertBefore(share, content.nextSibling);
+      if (header) {
+        var top = document.createElement('div');
+        top.className = 'nv-entry-share nv-entry-share-top';
+        top.innerHTML = html;
+        header.parentNode.insertBefore(top, header.nextSibling);
+      }
+
+      var bottom = document.createElement('div');
+      bottom.className = 'nv-entry-share';
+      bottom.innerHTML = html;
+      content.parentNode.insertBefore(bottom, content.nextSibling);
     });
   }
 
