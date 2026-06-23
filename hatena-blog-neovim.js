@@ -1226,6 +1226,7 @@
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014334_original.jpg',
     'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014811_original.jpg'
   ];
+  var DEFAULT_WALLPAPER = 'https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014811_original.jpg';
   function applyWallpaper(url) {
     document.documentElement.style.setProperty('--nv-wallpaper', "url('" + url + "')");
   }
@@ -1233,7 +1234,7 @@
     var existing = document.getElementById('nv-wallpaper');
     if (existing) { existing.style.display = 'flex'; return; }
 
-    var current = NvCookie.get('nv_wallpaper') || WALLPAPERS[0];
+    var current = NvCookie.get('nv_wallpaper') || DEFAULT_WALLPAPER;
     var thumbsHtml = WALLPAPERS.map(function (u) {
       var sel = u === current ? ' nv-wp-selected' : '';
       return '<div class="nv-wp-thumb' + sel + '" data-url="' + u + '" style="background-image:url(\'' + u + '\')"></div>';
@@ -1594,7 +1595,7 @@
   function init() {
     // Restore wallpaper from cookie (must run before paint to avoid flash)
     var savedWp = NvCookie.get('nv_wallpaper');
-    if (savedWp) applyWallpaper(savedWp);
+    applyWallpaper(savedWp || DEFAULT_WALLPAPER);
 
     // Apply theme: cookie > system preference > dark default
     var savedTheme = NvCookie.get('nv_theme');
