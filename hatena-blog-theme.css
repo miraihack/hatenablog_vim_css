@@ -1354,7 +1354,7 @@ a:visited { color: var(--blue); }
 .entry-content ol li::marker { color: var(--yellow); }
 
 /* --- Tables --- */
-.entry-content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+.entry-content table { border-collapse: collapse; width: 100%; margin: 1em 0; box-shadow: var(--card-shadow); }
 .entry-content th, .entry-content td { border: 1px solid var(--table-border); padding: 0.4em 0.8em; }
 .entry-content th { background-color: var(--table-header-bg); color: var(--blue); }
 .entry-content tr:hover { background-color: var(--selection); }
