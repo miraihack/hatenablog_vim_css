@@ -1252,6 +1252,9 @@ a:visited { color: var(--blue); }
   color: var(--tab-inactive);
 }
 
+/* Hatena's own [:contents] TOC is hidden in favor of the Telescope TOC */
+.entry-content .table-of-contents { display: none !important; }
+
 /* --- Telescope-style TOC (entry pages) --- */
 .nv-toc {
   border: 1px solid var(--table-border);
