@@ -64,20 +64,29 @@
       categories[folder].push(entryData);
     });
 
-    var html = '<ul>';
+    var html =
+      '<div class="nv-profile">' +
+      '<img class="nv-profile-avatar" src="https://www.geek.sc/wp-content/uploads/2025/10/L-0reQU5_400x400.jpg" alt="\u30B5\u30A4\u30D0\u30FC\u30E1\u30AC\u30CD">' +
+      '<div class="nv-profile-name">\u30B5\u30A4\u30D0\u30FC\u30E1\u30AC\u30CD</div>' +
+      '<p class="nv-profile-bio">Web\u30A8\u30F3\u30B8\u30CB\u30A2\u30FB\u30A4\u30F3\u30D5\u30E9\u30A8\u30F3\u30B8\u30CB\u30A2\u30FB\u30C7\u30FC\u30BF\u30A2\u30CA\u30EA\u30B9\u30C8\u30FB\u6280\u8853\u66F8\u4F5C\u5BB6\u3002\u6771\u4EAC\u90FD\u7DF4\u99AC\u533A\u5149\u304C\u4E18\u3068\u798F\u5CF6\u770C\u76F8\u99AC\u5E02\u306E\uFF12\u62E0\u70B9\u751F\u6D3B\u3092\u9001\u3063\u3066\u3044\u308B\u3002:wq</p>' +
+      '<div class="nv-profile-links"><a href="https://www.geek.sc/saito">\u8A73\u7D30\u306A\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB</a><a href="https://www.geek.sc/work">\u8077\u52D9\u7D4C\u6B74</a></div>' +
+      '<div class="nv-profile-links nv-profile-sns"><a href="https://x.com/miraihack">X</a><a href="https://facebook.com/miraihack">Facebook</a><a href="https://instagram.com/miraihack">Instagram</a></div>' +
+      '</div>';
+
+    html += '<ul>';
     var currentTitle = document.title.replace(/ - .*$/, '').trim() || 'index';
-    html += '<li><span class="nv-file-icon">\uD83D\uDCC4 </span>' +
+    html += '<li><span class="nv-file-icon">\uD83D\uDCCD </span>' +
       '<a href="' + window.location.href + '" tabindex="' + tabIdx + '" class="nv-selected">' + currentTitle + '</a></li>';
     tabIdx--;
 
     Object.keys(categories).forEach(function (cat) {
-      html += '<li><span class="nv-folder-icon">\uD83D\uDCC1 </span><a href="#" tabindex="' + tabIdx + '">' + cat + '/</a>';
+      html += '<li><span class="nv-folder-icon">\uD83D\uDCC2 </span><a href="#" tabindex="' + tabIdx + '">' + cat + '/</a>';
       tabIdx--;
       html += '<ul>';
       categories[cat].forEach(function (e, ei) {
         var isLast = ei === categories[cat].length - 1;
         var prefix = isLast ? '\u2514\u2500\u2500 ' : '\u251C\u2500\u2500 ';
-        html += '<li><span class="nv-tree-prefix">' + prefix + '</span><span class="nv-file-icon">\uD83D\uDCC4 </span>' +
+        html += '<li><span class="nv-tree-prefix">' + prefix + '</span><span class="nv-file-icon">\uD83D\uDCDD </span>' +
           '<a href="' + e.href + '" tabindex="' + tabIdx + '">' + e.title + '</a></li>';
         tabIdx--;
       });
@@ -97,7 +106,23 @@
           html += '<div class="nv-section-label">' + label + '</div><ul>';
           recentLinks.forEach(function (a, i) {
             var prefix = (i === recentLinks.length - 1) ? '\u2514\u2500\u2500 ' : '\u251C\u2500\u2500 ';
-            html += '<li><span class="nv-tree-prefix">' + prefix + '</span><span class="nv-file-icon">\uD83D\uDCC4 </span>' +
+            html += '<li><span class="nv-tree-prefix">' + prefix + '</span><span class="nv-file-icon">\uD83D\uDCDD </span>' +
+              '<a href="' + a.getAttribute('href') + '" tabindex="' + tabIdx + '">' + a.textContent.trim() + '</a></li>';
+            tabIdx--;
+          });
+          html += '</ul>';
+        }
+      }
+      var catMod = box2.querySelector('.hatena-module-category');
+      if (catMod) {
+        var catTitle = catMod.querySelector('.hatena-module-title');
+        var catLinks = catMod.querySelectorAll('.hatena-urllist a');
+        if (catLinks.length > 0) {
+          var cLabel = (catTitle && catTitle.textContent) ? catTitle.textContent.trim() : '\u30AB\u30C6\u30B4\u30EA';
+          html += '<div class="nv-section-label">' + cLabel + '</div><ul>';
+          catLinks.forEach(function (a, i) {
+            var prefix = (i === catLinks.length - 1) ? '\u2514\u2500\u2500 ' : '\u251C\u2500\u2500 ';
+            html += '<li><span class="nv-tree-prefix">' + prefix + '</span><span class="nv-file-icon">\uD83C\uDFF7\uFE0F </span>' +
               '<a href="' + a.getAttribute('href') + '" tabindex="' + tabIdx + '">' + a.textContent.trim() + '</a></li>';
             tabIdx--;
           });
