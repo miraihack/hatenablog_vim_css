@@ -1320,6 +1320,7 @@ a:visited { color: var(--blue); }
   border: 1px solid var(--blockquote-border);
   border-left: 3.5px solid var(--blue);
   border-radius: 8px;
+  box-shadow: var(--card-shadow);
   padding: 0.6em 1.2em;
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -1344,7 +1345,7 @@ a:visited { color: var(--blue); }
 .entry-content tr:hover { background-color: var(--selection); }
 
 /* --- Images --- */
-.entry-content img { max-width: 90%; border-radius: 4px; height: auto; }
+.entry-content img { max-width: 90%; border-radius: 12px; height: auto; box-shadow: var(--card-shadow); }
 
 .nv-mobile .entry-content img { max-width: 98% !important; }
 
