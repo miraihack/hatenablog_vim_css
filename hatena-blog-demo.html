@@ -256,6 +256,14 @@ lspconfig.lua_ls.setup({
   </div>
 </div>
 
+<script>
+  // Demo only: open with ?page=entry to preview the single-entry (permalink) layout
+  if (/[?&]page=entry/.test(location.search)) {
+    document.body.className += ' page-entry';
+    var demoEntries = document.querySelectorAll('.entry');
+    for (var i = 1; i < demoEntries.length; i++) demoEntries[i].parentNode.removeChild(demoEntries[i]);
+  }
+</script>
 <script src="hatena-blog-neovim.js"></script>
 
 </body>

@@ -1142,16 +1142,168 @@ a:visited { color: var(--blue); }
   left: 1em;
 }
 
-/* --- Code Blocks --- */
+/* --- Code Blocks (always dark: vim "hybrid" palette, both themes) --- */
 .entry-content pre {
-  background-color: var(--bg-solid) !important;
+  background-color: #1d1f21 !important;
   padding: 10px; border-radius: 4px; overflow-x: auto;
   text-wrap: auto;
   border: 1px solid rgba(205, 214, 244, 0.15);
 }
 .entry-content pre code {
   background-color: transparent !important;
-  color: var(--font-color); padding: 0; font-size: 1em; border: none;
+  color: #c5c8c6; padding: 0; font-size: 1em; border: none;
+}
+
+/* Enhanced code block frame built by JS (enhanceCodeBlocks) */
+.nv-code {
+  margin: 1.2em 0;
+  border: 1px solid #373b41;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1d1f21;
+}
+.nv-code-head {
+  display: flex;
+  align-items: center;
+  padding: 5px 12px;
+  background-color: #282a2e;
+  border-bottom: 1px solid #373b41;
+}
+.nv-code-lang { color: #969896; font-size: 12px; }
+.nv-code-yank {
+  margin-left: auto;
+  background: none;
+  border: 1px solid #4b5056;
+  border-radius: 4px;
+  color: #969896;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 1px 10px;
+  cursor: pointer;
+}
+.nv-code-yank:hover { color: #c5c8c6; border-color: #969896; }
+.nv-code-yank.nv-yanked { color: #b5bd68; border-color: #b5bd68; }
+.nv-code-body { display: flex; overflow-x: auto; }
+.entry-content .nv-code pre {
+  border: none !important;
+  border-radius: 0;
+  margin: 0;
+  flex: 1;
+  overflow-x: visible;
+  text-wrap: nowrap;
+  white-space: pre;
+}
+.entry-content .nv-code .nv-code-gutter {
+  color: #4b5056;
+  text-align: right;
+  padding: 10px 10px 10px 14px;
+  border-right: 1px solid #282a2e !important;
+  border-radius: 0;
+  margin: 0;
+  user-select: none;
+  flex: 0 0 auto;
+  overflow-x: visible;
+  position: sticky;
+  left: 0;
+}
+.nv-mobile .entry-content .nv-code .nv-code-gutter { display: none; }
+.nv-mobile .entry-content .nv-code pre { white-space: pre-wrap; text-wrap: auto; }
+
+/* --- Vim statusline article header (entry pages) --- */
+.nv-statusline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0.8em 0 1.2em;
+  font-size: 13px;
+  line-height: 1.7;
+  border: 1px solid var(--table-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--bg-solid);
+  box-shadow: var(--card-shadow);
+}
+.nv-sl-file {
+  background-color: var(--blue);
+  color: var(--bg-solid);
+  font-weight: bold;
+  padding: 3px 14px;
+}
+.nv-sl-item {
+  padding: 3px 12px;
+  color: var(--tab-inactive);
+  border-right: 1px solid var(--table-border);
+}
+.nv-sl-right {
+  margin-left: auto;
+  padding: 3px 14px;
+  color: var(--tab-inactive);
+}
+
+/* --- Telescope-style TOC (entry pages) --- */
+.nv-toc {
+  border: 1px solid var(--table-border);
+  border-radius: 8px;
+  background-color: var(--bg-solid);
+  box-shadow: var(--card-shadow);
+  margin: 0 0 2em;
+  font-size: 0.85em;
+  overflow: hidden;
+}
+.nv-toc-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 1.1em;
+  border-bottom: 1px solid var(--table-border);
+  font-weight: bold;
+}
+.nv-toc-caret { color: var(--blue); }
+.nv-toc-count {
+  margin-left: auto;
+  color: var(--tab-inactive);
+  font-weight: normal;
+  font-size: 0.85em;
+}
+.nv-toc-list { padding: 0.5em 0; }
+.entry-content .nv-toc-row {
+  position: relative;
+  display: block;
+  padding: 0.28em 1.1em 0.28em 2.4em;
+  color: var(--font-color);
+  text-decoration: none;
+  line-height: 1.8;
+}
+.nv-toc-row::before {
+  content: ">";
+  position: absolute;
+  left: 1.1em;
+  color: var(--blue);
+  font-weight: bold;
+  opacity: 0;
+}
+.entry-content .nv-toc-row:hover { background-color: var(--selection); }
+.nv-toc-row:hover::before { opacity: 1; }
+.entry-content .nv-toc-h3 { padding-left: 3.6em; color: var(--tab-inactive); }
+.nv-toc-h3::before { left: 2.4em; }
+
+/* --- EOF tildes (entry pages) --- */
+.nv-eof { margin-top: 2.5em; user-select: none; }
+.nv-eof span {
+  display: block;
+  color: var(--blue);
+  opacity: 0.45;
+  line-height: 1.9;
+  font-weight: bold;
+}
+
+/* --- Scroll position in prompt bar --- */
+#nv-scrollpos {
+  margin-left: auto;
+  margin-right: 14px;
+  font-size: 1.3em;
+  color: var(--tab-inactive);
+  white-space: nowrap;
 }
 
 /* --- Inline Code --- */

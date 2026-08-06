@@ -440,6 +440,166 @@
     });
   }
 
+  // ─── Entry page extras: statusline, Telescope TOC, EOF, code blocks ───
+  function isSingleEntryPage() {
+    return document.body.classList.contains('page-entry') || document.querySelectorAll('.entry').length === 1;
+  }
+
+  function entrySlug(entry) {
+    var a = entry.querySelector('.entry-title a');
+    if (a && a.getAttribute('href')) {
+      var seg = a.pathname.split('/').filter(Boolean).pop();
+      if (seg) return decodeURIComponent(seg).replace(/\.[a-z]+$/, '').replace(/[<>&"']/g, '') + '.md';
+    }
+    return 'entry.md';
+  }
+
+  function buildStatusline(entry) {
+    var content = entry.querySelector('.entry-content');
+    if (!content || entry.querySelector('.nv-statusline')) return;
+    var chars = content.textContent.replace(/\s+/g, '').length;
+    var mins = Math.max(1, Math.round(chars / 600));
+    var sl = document.createElement('div');
+    sl.className = 'nv-statusline';
+    sl.innerHTML =
+      '<span class="nv-sl-file">' + entrySlug(entry) + '</span>' +
+      '<span class="nv-sl-item">markdown</span>' +
+      '<span class="nv-sl-item">utf-8[unix]</span>' +
+      '<span class="nv-sl-right">' + chars.toLocaleString() + '字 · 約' + mins + '分</span>';
+    content.parentNode.insertBefore(sl, content);
+  }
+
+  function buildToc(entry) {
+    var content = entry.querySelector('.entry-content');
+    if (!content || content.querySelector('.nv-toc')) return;
+    var heads = content.querySelectorAll('h2, h3');
+    if (heads.length < 3) return;
+    var toc = document.createElement('nav');
+    toc.className = 'nv-toc';
+    var rows = '';
+    heads.forEach(function (h, i) {
+      if (!h.id) h.id = 'nv-h' + i;
+      rows += '<a class="nv-toc-row nv-toc-' + h.tagName.toLowerCase() + '" href="#' + h.id + '">' +
+        h.textContent.replace(/[<>&"']/g, '') + '</a>';
+    });
+    toc.innerHTML =
+      '<div class="nv-toc-prompt"><span class="nv-toc-caret">&gt;</span> 目次<span class="nv-toc-count">' + heads.length + '</span></div>' +
+      '<div class="nv-toc-list">' + rows + '</div>';
+    toc.addEventListener('click', function (e) {
+      var a = e.target.closest('a.nv-toc-row');
+      if (!a) return;
+      e.preventDefault();
+      var t = document.getElementById(a.getAttribute('href').slice(1));
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    content.insertBefore(toc, content.querySelector('h2, h3'));
+  }
+
+  function buildEofMarker(entry) {
+    var content = entry.querySelector('.entry-content');
+    if (!content || content.querySelector('.nv-eof')) return;
+    var eof = document.createElement('div');
+    eof.className = 'nv-eof';
+    eof.setAttribute('aria-hidden', 'true');
+    eof.innerHTML = '<span>~</span><span>~</span><span>~</span>';
+    content.appendChild(eof);
+  }
+
+  function enhanceCodeBlocks() {
+    document.querySelectorAll('.entry-content pre').forEach(function (pre) {
+      if (pre.closest('.nv-code') || pre.classList.contains('nv-code-gutter')) return;
+      var lang = pre.getAttribute('data-lang') || '';
+      var m = (pre.className + ' ' + (pre.querySelector('code') ? pre.querySelector('code').className : ''))
+        .match(/lang(?:uage)?-([\w+#-]+)/);
+      if (m) lang = m[1];
+
+      var wrap = document.createElement('div');
+      wrap.className = 'nv-code';
+      var head = document.createElement('div');
+      head.className = 'nv-code-head';
+      var label = document.createElement('span');
+      label.className = 'nv-code-lang';
+      label.textContent = lang || 'code';
+      var yank = document.createElement('button');
+      yank.type = 'button';
+      yank.className = 'nv-code-yank';
+      yank.textContent = 'yank';
+      yank.addEventListener('click', function () {
+        function done() {
+          yank.textContent = 'yanked!';
+          yank.classList.add('nv-yanked');
+          setTimeout(function () { yank.textContent = 'yank'; yank.classList.remove('nv-yanked'); }, 1400);
+        }
+        function fallback() {
+          var ta = document.createElement('textarea');
+          ta.value = pre.textContent;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { if (document.execCommand('copy')) done(); } catch (e) {}
+          ta.remove();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(pre.textContent).then(done, fallback);
+        } else {
+          fallback();
+        }
+      });
+      head.appendChild(label);
+      head.appendChild(yank);
+
+      var body = document.createElement('div');
+      body.className = 'nv-code-body';
+      var gutter = document.createElement('pre');
+      gutter.className = 'nv-code-gutter';
+      var lines = pre.textContent.split('\n');
+      if (lines.length && lines[lines.length - 1] === '') lines.pop();
+      var nums = [];
+      for (var i = 1; i <= lines.length; i++) nums.push(i);
+      gutter.textContent = nums.join('\n');
+
+      pre.parentNode.insertBefore(wrap, pre);
+      body.appendChild(gutter);
+      body.appendChild(pre);
+      wrap.appendChild(head);
+      wrap.appendChild(body);
+    });
+  }
+
+  function setupScrollPos() {
+    var scroller = document.getElementById('main-inner');
+    var prompt = document.getElementById('nv-prompt');
+    if (!scroller || !prompt) return;
+    var el = document.createElement('span');
+    el.id = 'nv-scrollpos';
+    prompt.appendChild(el);
+    var pending = false;
+    function update() {
+      pending = false;
+      var max = scroller.scrollHeight - scroller.clientHeight;
+      var t = scroller.scrollTop;
+      el.textContent = max <= 0 ? 'All' : t <= 0 ? 'Top' : t >= max - 2 ? 'Bot' : Math.round(t / max * 100) + '%';
+    }
+    scroller.addEventListener('scroll', function () {
+      if (!pending) { pending = true; requestAnimationFrame(update); }
+    });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  function buildEntryExtras() {
+    enhanceCodeBlocks();
+    if (isSingleEntryPage()) {
+      document.querySelectorAll('.entry').forEach(function (entry) {
+        buildStatusline(entry);
+        buildToc(entry);
+        buildEofMarker(entry);
+      });
+    }
+    setupScrollPos();
+  }
+
   // ─── Tab management ───
   function getTabs() { try { return JSON.parse(NvCookie.get('nv_tabs')) || []; } catch (e) { return []; } }
   function setTabs(tabs) { NvCookie.set('nv_tabs', JSON.stringify(tabs)); }
@@ -900,7 +1060,9 @@
     var cursorBlock = document.createElement('span');
     cursorBlock.className = 'nv-vim-cursor';
     cursorBlock.textContent = '\u00A0';
-    lastContent.appendChild(cursorBlock);
+    var eof = lastContent.querySelector(':scope > .nv-eof');
+    if (eof) lastContent.insertBefore(cursorBlock, eof);
+    else lastContent.appendChild(cursorBlock);
   }
 
   // ─── Window helpers (shared by Terminal, Filer) ───
@@ -1648,6 +1810,7 @@
     setupContentLinks();
     markHeroParagraphs();
     buildEntryShareButtons();
+    buildEntryExtras();
 
     // Desktop: apply saved window position (after UI is built)
     if (!isMobile()) {
