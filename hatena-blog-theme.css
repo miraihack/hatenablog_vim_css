@@ -29,6 +29,7 @@
   --table-header-bg: rgba(130, 170, 255, 0.15);
   --hr-color: rgba(205, 214, 244, 0.2);
   --keyword-dot: rgba(205, 214, 244, 0.3);
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* --- CSS Variables: Light Mode --- */
@@ -51,6 +52,7 @@
   --table-header-bg: rgba(37, 99, 235, 0.08);
   --hr-color: rgba(30, 30, 46, 0.15);
   --keyword-dot: rgba(30, 30, 46, 0.25);
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 /* Light mode body background */
@@ -1105,6 +1107,39 @@ a:visited { color: var(--blue); }
 
 .entry-content a { color: var(--blue); }
 .entry-content a:hover { background-color: var(--selection); }
+
+/* --- Lead Paragraph Hero (avatar card for first paragraph) --- */
+.entry .entry-content > p:first-of-type:not(:has(img)) {
+  position: relative;
+  background-color: var(--bg-solid);
+  border: 1px solid var(--table-border);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 1.1em 1.4em 1.1em calc(2.5em + 56px);
+  min-height: calc(2.2em + 56px);
+  box-sizing: border-box;
+  margin: 0.4em 0 1.8em;
+}
+.entry .entry-content > p:first-of-type:not(:has(img))::before {
+  content: "";
+  position: absolute;
+  left: 1.3em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: url('https://www.geek.sc/wp-content/uploads/2025/10/L-0reQU5_400x400.jpg') center center / cover no-repeat;
+  border: 2px solid var(--table-border);
+}
+.nv-mobile .entry .entry-content > p:first-of-type:not(:has(img)) {
+  padding-left: calc(2.1em + 44px);
+}
+.nv-mobile .entry .entry-content > p:first-of-type:not(:has(img))::before {
+  width: 44px;
+  height: 44px;
+  left: 1em;
+}
 
 /* --- Code Blocks --- */
 .entry-content pre {
