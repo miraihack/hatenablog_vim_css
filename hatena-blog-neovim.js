@@ -432,6 +432,15 @@
     if (entryLinks.length > 0) entryLinks[0].classList.add('nv-selected');
   }
 
+  // Hatena strips pseudo-class selectors like :first-of-type from custom CSS,
+  // so the hero paragraph is marked with a class from JS instead
+  function markHeroParagraphs() {
+    document.querySelectorAll('.entry .entry-content').forEach(function (content) {
+      var p = content.querySelector(':scope > p');
+      if (p && !p.querySelector('img')) p.classList.add('nv-hero');
+    });
+  }
+
   // ─── Tab management ───
   function getTabs() { try { return JSON.parse(NvCookie.get('nv_tabs')) || []; } catch (e) { return []; } }
   function setTabs(tabs) { NvCookie.set('nv_tabs', JSON.stringify(tabs)); }
@@ -1638,6 +1647,7 @@
     buildTabBar();
     buildPromptBar();
     setupContentLinks();
+    markHeroParagraphs();
     buildEntryShareButtons();
 
     // Desktop: apply saved window position (after UI is built)

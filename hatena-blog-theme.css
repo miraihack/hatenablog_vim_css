@@ -1108,8 +1108,10 @@ a:visited { color: var(--blue); }
 .entry-content a { color: var(--blue); }
 .entry-content a:hover { background-color: var(--selection); }
 
-/* --- Lead Paragraph Hero (avatar card for first paragraph) --- */
-.entry .entry-content > p:first-of-type:not(:has(img)) {
+/* --- Lead Paragraph Hero (avatar card for first paragraph) ---
+   .nv-hero is added by JS (markHeroParagraphs); Hatena strips
+   pseudo-class selectors like :first-of-type from custom CSS */
+.entry-content p.nv-hero {
   position: relative;
   background-color: var(--bg-solid);
   border: 1px solid var(--table-border);
@@ -1120,7 +1122,7 @@ a:visited { color: var(--blue); }
   box-sizing: border-box;
   margin: 0.4em 0 1.8em;
 }
-.entry .entry-content > p:first-of-type:not(:has(img))::before {
+.entry-content p.nv-hero::before {
   content: "";
   position: absolute;
   left: 1.3em;
@@ -1132,10 +1134,10 @@ a:visited { color: var(--blue); }
   background: url('https://www.geek.sc/wp-content/uploads/2025/10/L-0reQU5_400x400.jpg') center center / cover no-repeat;
   border: 2px solid var(--table-border);
 }
-.nv-mobile .entry .entry-content > p:first-of-type:not(:has(img)) {
+.nv-mobile .entry-content p.nv-hero {
   padding-left: calc(2.1em + 44px);
 }
-.nv-mobile .entry .entry-content > p:first-of-type:not(:has(img))::before {
+.nv-mobile .entry-content p.nv-hero::before {
   width: 44px;
   height: 44px;
   left: 1em;
