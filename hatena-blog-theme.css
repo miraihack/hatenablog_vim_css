@@ -1109,8 +1109,7 @@ a:visited { color: var(--blue); }
 .entry-content a:hover { background-color: var(--selection); }
 
 /* --- Lead Paragraph Hero (avatar card for first paragraph) ---
-   .nv-hero is added by JS (markHeroParagraphs); Hatena strips
-   pseudo-class selectors like :first-of-type from custom CSS */
+   .nv-hero is added by JS (markHeroParagraphs) */
 .entry-content p.nv-hero {
   position: relative;
   background-color: var(--bg-solid);
