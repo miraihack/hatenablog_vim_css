@@ -458,11 +458,21 @@
     if (entryLinks.length > 0) entryLinks[0].classList.add('nv-selected');
   }
 
-  // Mark the first image-free paragraph of each entry as the hero card
+  // Mark the first and last image-free paragraphs of each entry as hero cards
   function markHeroParagraphs() {
     document.querySelectorAll('.entry .entry-content').forEach(function (content) {
-      var p = content.querySelector(':scope > p');
-      if (p && !p.querySelector('img')) p.classList.add('nv-hero');
+      var ps = content.querySelectorAll(':scope > p');
+      if (!ps.length) return;
+      var first = ps[0];
+      if (!first.querySelector('img')) first.classList.add('nv-hero');
+      for (var i = ps.length - 1; i >= 0; i--) {
+        var last = ps[i];
+        if (last === first) break;
+        if (!last.querySelector('img') && last.textContent.trim()) {
+          last.classList.add('nv-hero');
+          break;
+        }
+      }
     });
   }
 
