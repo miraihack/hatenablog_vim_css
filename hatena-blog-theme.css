@@ -1464,7 +1464,7 @@ a:visited { color: var(--blue); }
 }
 .entry-content .nv-toc-row:hover { background-color: var(--selection); }
 .nv-toc-row:hover::before { opacity: 1; }
-.entry-content .nv-toc-h3 { padding-left: 3.6em; color: var(--tab-inactive); }
+.entry-content .nv-toc-h3 { padding-left: 3.6em; color: var(--font-color); opacity: 0.78; }
 .nv-toc-h3::before { left: 2.4em; }
 
 /* --- EOF tildes (entry pages) --- */
