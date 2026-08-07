@@ -1351,13 +1351,9 @@ a:visited { color: var(--blue); }
   flex: 1 1 0;
 }
 .entry-grid .entry-card .entry-excerpt,
-.entry-grid .entry-card .entry-description {
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.entry-grid .entry-card .entry-description { margin: 0; }
+.entry-card .nv-read-more { color: var(--blue); margin-left: 0.2em; }
+.entry-card .nv-read-more:hover { background-color: var(--selection); }
 .entry-grid .entry-card .entry-footer,
 .entry-grid .entry-card .nv-card-more { margin-top: 0.5em; font-size: 0.9em; }
 .nv-card-more a { color: var(--tab-inactive); font-size: 0.85em; }

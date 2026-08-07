@@ -467,6 +467,30 @@
   }
 
   // ─── Entry cards on top/list pages (same design as geek.sc) ───
+  // Cut at a sentence boundary: extend to the next 「。」, but never past
+  // 300 chars — fall back to the previous 「。」 instead
+  function cardExcerpt(text) {
+    text = text.replace(/\s+/g, ' ').trim();
+    if (text.length > 300) {
+      var head = text.slice(0, 300);
+      var cut = head.lastIndexOf('。');
+      if (cut >= 0) return head.slice(0, cut + 1);
+      var next = text.indexOf('。', 300);
+      if (next !== -1 && next < 450) return text.slice(0, next + 1);
+      return head;
+    }
+    return text;
+  }
+
+  function appendReadMore(p, href) {
+    p.appendChild(document.createTextNode('…'));
+    var a = document.createElement('a');
+    a.className = 'nv-read-more';
+    a.href = href;
+    a.textContent = 'さらに読む';
+    p.appendChild(a);
+  }
+
   function makeMoreRead(href) {
     var more = document.createElement('div');
     more.className = 'nv-card-more';
@@ -488,7 +512,13 @@
       if (entry.classList.contains('entry-card')) return;
       entry.classList.add('entry-card');
       var titleA = entry.querySelector('.entry-title a, .entry-title-link');
-      entry.appendChild(makeMoreRead(titleA ? titleA.getAttribute('href') || '#' : '#'));
+      var href = titleA ? titleA.getAttribute('href') || '#' : '#';
+      var desc = entry.querySelector('.entry-description');
+      if (desc) {
+        desc.textContent = cardExcerpt(desc.textContent).replace(/[…\s]+$/, '');
+        appendReadMore(desc, href);
+      }
+      entry.appendChild(makeMoreRead(href));
     });
 
     // Full-entry lists (e.g. blogs configured to show whole entries)
@@ -525,8 +555,8 @@
         ex.className = 'nv-card-content';
         var p = document.createElement('p');
         p.className = 'entry-excerpt';
-        var text = content.textContent.replace(/\s+/g, ' ').trim();
-        p.textContent = text.length > 300 ? text.slice(0, 300) + '…' : text;
+        p.textContent = cardExcerpt(content.textContent);
+        appendReadMore(p, href);
         ex.appendChild(p);
         content.parentNode.insertBefore(ex, content);
 
