@@ -487,9 +487,6 @@
     document.querySelectorAll('.archive-entry').forEach(function (entry) {
       if (entry.classList.contains('entry-card')) return;
       entry.classList.add('entry-card');
-      var header = entry.querySelector('.archive-entry-header');
-      var tags = entry.querySelector('.archive-entry-tags-wrapper');
-      if (header && tags) header.appendChild(tags);
       var titleA = entry.querySelector('.entry-title a, .entry-title-link');
       entry.appendChild(makeMoreRead(titleA ? titleA.getAttribute('href') || '#' : '#'));
     });

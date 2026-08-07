@@ -1361,6 +1361,7 @@ a:visited { color: var(--blue); }
 .nv-card-more a { color: var(--tab-inactive); font-size: 0.85em; }
 .nv-card-more a:hover { background-color: var(--selection); }
 .entry-grid .entry-card .social-buttons { display: none; }
+.archive-entry .archive-entry-tags-wrapper { display: none !important; }
 
 /* --- Header date + category chips (same as geek.sc) --- */
 .entry-header .date a,
