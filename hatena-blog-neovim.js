@@ -465,6 +465,50 @@
     });
   }
 
+  // ─── Entry cards on top/list pages (same design as geek.sc) ───
+  function buildEntryCards() {
+    if (isSingleEntryPage()) return;
+    document.querySelectorAll('.entry').forEach(function (entry) {
+      if (entry.classList.contains('entry-card')) return;
+      var content = entry.querySelector('.entry-content');
+      var titleA = entry.querySelector('.entry-title a');
+      if (!content || !titleA) return;
+      entry.classList.add('entry-card');
+      var href = titleA.getAttribute('href') || '#';
+
+      var body = document.createElement('div');
+      body.className = 'nv-card-body';
+      var img = content.querySelector('img');
+      if (img && img.getAttribute('src')) {
+        var thumb = document.createElement('a');
+        thumb.className = 'nv-card-thumb';
+        thumb.href = href;
+        var t = document.createElement('img');
+        t.src = img.getAttribute('src');
+        t.alt = '';
+        t.loading = 'lazy';
+        thumb.appendChild(t);
+        body.appendChild(thumb);
+      }
+      var p = document.createElement('p');
+      p.className = 'nv-card-excerpt';
+      var text = content.textContent.replace(/\s+/g, ' ').trim();
+      p.textContent = text.length > 180 ? text.slice(0, 180) + '…' : text;
+      body.appendChild(p);
+      content.parentNode.insertBefore(body, content);
+
+      var more = document.createElement('div');
+      more.className = 'entry-footer-section nv-card-more';
+      var ma = document.createElement('a');
+      ma.href = href;
+      ma.textContent = 'More read';
+      more.appendChild(ma);
+      var footer = entry.querySelector('.entry-footer');
+      if (footer) footer.appendChild(more);
+      else entry.appendChild(more);
+    });
+  }
+
   // ─── Entry page extras: statusline, Telescope TOC, EOF, code blocks ───
   function isSingleEntryPage() {
     return document.body.classList.contains('page-entry') || document.querySelectorAll('.entry').length === 1;
@@ -1834,6 +1878,7 @@
     buildPromptBar();
     setupContentLinks();
     markHeroParagraphs();
+    buildEntryCards();
     buildEntryShareButtons();
     buildEntryExtras();
 

@@ -1278,6 +1278,34 @@ a:visited { color: var(--blue); }
 .nv-mobile .entry-content .nv-code .nv-code-gutter { display: none; }
 .nv-mobile .entry-content .nv-code pre { white-space: pre-wrap; text-wrap: auto; }
 
+/* --- Entry cards on top/list pages (same as geek.sc) --- */
+.entry-card {
+  border: 1px solid var(--table-border);
+  border-radius: 12px;
+  background-color: var(--bg-solid);
+  box-shadow: var(--card-shadow);
+  padding: 1.2em 1.5em 1em;
+  margin-bottom: 1.8em;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.entry-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.entry-card .entry-title { font-size: 1.25em; }
+.entry-card .entry-content { display: none !important; }
+.nv-card-body { display: flex; gap: 16px; align-items: flex-start; margin: 0.6em 0; }
+.nv-card-thumb { flex-shrink: 0; }
+.nv-card-thumb img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--table-border);
+}
+.nv-mobile .nv-card-thumb img { width: 88px; height: 88px; }
+.nv-card-excerpt { font-size: 0.92em; line-height: 1.9; margin: 0; flex: 1; min-width: 0; }
+.entry-card .nv-card-more { margin-top: 0.4em; }
+.entry-card .nv-card-more a { color: var(--tab-inactive); font-size: 0.85em; }
+.entry-card .nv-card-more a:hover { background-color: var(--selection); }
+
 /* --- Vim statusline article header (entry pages) --- */
 .nv-statusline {
   display: flex;
