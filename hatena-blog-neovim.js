@@ -1819,15 +1819,23 @@
     if (active) {
       document.documentElement.classList.add('nv-1984');
       // Replace images
-      document.querySelectorAll('.entry-content img').forEach(function (img) {
+      document.querySelectorAll('.entry-content img, .entry-thumb img').forEach(function (img) {
         if (!img.getAttribute('data-nv-orig-src')) {
           img.setAttribute('data-nv-orig-src', img.src);
         }
         img.src = _1984_IMG;
       });
+      // Archive list thumbnails are background-image divs
+      document.querySelectorAll('div.entry-thumb').forEach(function (el) {
+        if (el.querySelector('img')) return;
+        if (!el.getAttribute('data-nv-orig-bg')) {
+          el.setAttribute('data-nv-orig-bg', el.style.backgroundImage || '');
+        }
+        el.style.backgroundImage = 'url("' + _1984_IMG + '")';
+      });
       // Insert propaganda
       if (!document.querySelector('.nv-1984-msg')) {
-        var entries = document.querySelectorAll('.entry-content');
+        var entries = document.querySelectorAll('.entry-content, .archive-entry-body');
         entries.forEach(function (entry) {
           var paras = entry.querySelectorAll('p, h2, h3, h4, li');
           var indices = [];
@@ -1850,9 +1858,13 @@
     } else {
       document.documentElement.classList.remove('nv-1984');
       // Restore images
-      document.querySelectorAll('.entry-content img[data-nv-orig-src]').forEach(function (img) {
+      document.querySelectorAll('img[data-nv-orig-src]').forEach(function (img) {
         img.src = img.getAttribute('data-nv-orig-src');
         img.removeAttribute('data-nv-orig-src');
+      });
+      document.querySelectorAll('div.entry-thumb[data-nv-orig-bg]').forEach(function (el) {
+        el.style.backgroundImage = el.getAttribute('data-nv-orig-bg');
+        el.removeAttribute('data-nv-orig-bg');
       });
       // Remove propaganda
       document.querySelectorAll('.nv-1984-msg').forEach(function (el) { el.remove(); });

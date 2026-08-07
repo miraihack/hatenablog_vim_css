@@ -887,6 +887,8 @@ a:visited { color: var(--blue); }
 }
 
 /* --- 1984 mode styles --- */
+.nv-1984 .entry-description,
+.nv-1984 .entry-excerpt,
 .nv-1984 .entry-content p,
 .nv-1984 .entry-content li,
 .nv-1984 .entry-content h1,
