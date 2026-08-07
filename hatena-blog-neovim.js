@@ -1029,7 +1029,7 @@
     // container: below topbar
     if (ci) ci.setAttribute('style',
       'position:fixed;top:' + (mY + TB_H) + 'px;left:' + mX + 'px;right:' + (window.innerWidth - mX - mW) + 'px;' +
-      'height:' + (mH - TB_H) + 'px;margin:0;padding:0;border:none;border-radius:0;' +
+      'height:' + (mH - TB_H) + 'px;margin:0;padding:0 !important;border:none;border-radius:0;' +
       'overflow:hidden;background:var(--bg-color);box-shadow:0 20px 60px rgba(0,0,0,0.5);z-index:99998;');
 
     // prompt: below container
