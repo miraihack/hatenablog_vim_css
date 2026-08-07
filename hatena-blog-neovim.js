@@ -405,6 +405,7 @@
   // ─── Article-end share buttons (one set per .entry) ───
   function buildEntryShareButtons() {
     document.querySelectorAll('.entry').forEach(function (entry) {
+      if (entry.classList.contains('entry-card')) return;
       if (entry.querySelector('.nv-entry-share')) return;
       var titleEl = entry.querySelector('.entry-title a');
       var content = entry.querySelector('.entry-content');
@@ -466,47 +467,78 @@
   }
 
   // ─── Entry cards on top/list pages (same design as geek.sc) ───
+  function makeMoreRead(href) {
+    var more = document.createElement('div');
+    more.className = 'nv-card-more';
+    var ma = document.createElement('a');
+    ma.href = href;
+    ma.textContent = 'More read';
+    more.appendChild(ma);
+    return more;
+  }
+
   function buildEntryCards() {
     if (isSingleEntryPage()) return;
-    document.querySelectorAll('.entry').forEach(function (entry) {
-      if (entry.classList.contains('entry-card')) return;
-      var content = entry.querySelector('.entry-content');
-      var titleA = entry.querySelector('.entry-title a');
-      if (!content || !titleA) return;
-      entry.classList.add('entry-card');
-      var href = titleA.getAttribute('href') || '#';
 
-      var body = document.createElement('div');
-      body.className = 'nv-card-body';
-      var img = content.querySelector('img');
-      if (img && img.getAttribute('src')) {
-        var thumb = document.createElement('a');
-        thumb.className = 'nv-card-thumb';
-        thumb.href = href;
-        var t = document.createElement('img');
-        t.src = img.getAttribute('src');
-        t.alt = '';
-        t.loading = 'lazy';
-        thumb.appendChild(t);
-        body.appendChild(thumb);
-      }
-      var p = document.createElement('p');
-      p.className = 'nv-card-excerpt';
-      var text = content.textContent.replace(/\s+/g, ' ').trim();
-      p.textContent = text.length > 180 ? text.slice(0, 180) + '…' : text;
-      body.appendChild(p);
-      content.parentNode.insertBefore(body, content);
-
-      var more = document.createElement('div');
-      more.className = 'entry-footer-section nv-card-more';
-      var ma = document.createElement('a');
-      ma.href = href;
-      ma.textContent = 'More read';
-      more.appendChild(ma);
-      var footer = entry.querySelector('.entry-footer');
-      if (footer) footer.appendChild(more);
-      else entry.appendChild(more);
+    // Hatena list/archive pages (top page in list mode): .archive-entries > .archive-entry
+    document.querySelectorAll('.archive-entries').forEach(function (list) {
+      list.classList.add('entry-grid');
     });
+    document.querySelectorAll('.archive-entry').forEach(function (entry) {
+      if (entry.classList.contains('entry-card')) return;
+      entry.classList.add('entry-card');
+      var header = entry.querySelector('.archive-entry-header');
+      var tags = entry.querySelector('.archive-entry-tags-wrapper');
+      if (header && tags) header.appendChild(tags);
+      var titleA = entry.querySelector('.entry-title a, .entry-title-link');
+      entry.appendChild(makeMoreRead(titleA ? titleA.getAttribute('href') || '#' : '#'));
+    });
+
+    // Full-entry lists (e.g. blogs configured to show whole entries)
+    var entries = document.querySelectorAll('.entry');
+    if (entries.length > 1) {
+      var grid = document.createElement('div');
+      grid.className = 'entry-grid';
+      entries[0].parentNode.insertBefore(grid, entries[0]);
+      entries.forEach(function (entry) {
+        grid.appendChild(entry);
+        if (entry.classList.contains('entry-card')) return;
+        var content = entry.querySelector('.entry-content');
+        var titleA = entry.querySelector('.entry-title a');
+        if (!content || !titleA) return;
+        entry.classList.add('entry-card');
+        var href = titleA.getAttribute('href') || '#';
+        var header = entry.querySelector('.entry-header');
+
+        var img = content.querySelector('img');
+        if (img && img.getAttribute('src')) {
+          var thumb = document.createElement('a');
+          thumb.className = 'entry-thumb';
+          thumb.href = href;
+          var t = document.createElement('img');
+          t.src = img.getAttribute('src');
+          t.alt = '';
+          t.loading = 'lazy';
+          thumb.appendChild(t);
+          if (header) header.parentNode.insertBefore(thumb, header.nextSibling);
+          else entry.insertBefore(thumb, entry.firstChild);
+        }
+
+        var ex = document.createElement('div');
+        ex.className = 'nv-card-content';
+        var p = document.createElement('p');
+        p.className = 'entry-excerpt';
+        var text = content.textContent.replace(/\s+/g, ' ').trim();
+        p.textContent = text.length > 300 ? text.slice(0, 300) + '…' : text;
+        ex.appendChild(p);
+        content.parentNode.insertBefore(ex, content);
+
+        var footer = entry.querySelector('.entry-footer');
+        var more = makeMoreRead(href);
+        if (footer) footer.appendChild(more);
+        else entry.appendChild(more);
+      });
+    }
   }
 
   // ─── Entry page extras: statusline, Telescope TOC, EOF, code blocks ───
