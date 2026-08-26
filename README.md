@@ -66,36 +66,32 @@ Catppuccin/Moonlight パレットベースの2色切替。Cookie で保持。
 |----------|------|
 | `hatena-blog-theme.css` | テーマCSS（ソース） |
 | `hatena-blog-neovim.js` | テーマJS（ソース） |
-| `hatena-blog-neovim-hatena.html` | はてなブログ用にCSS+JSをminifyして結合したファイル |
-| `hatena-blog-demo.html` | ローカルデモ用HTML |
+| `hatena-blog-neovim-boot.js` | 初回描画前にテーマ/モードのクラスと壁紙を適用する極小ブートJS（ソース） |
+| `hatena-blog-neovim-head.html` | **`<head>` 用**: preconnect + 非同期フォント読込 + ブートJS + minify済CSS（生成物） |
+| `hatena-blog-neovim.min.js` | **記事下/フッタ用**: minify済JS（生成物） |
+| `hatena-blog-theme.min.css` | 旧構成用: `@import` 入りの単体CSS（生成物） |
+| `hatena-blog-neovim-hatena.html` | 旧構成用: CSS+JS結合ファイル（生成物・64KB超） |
+| `hatena-blog-demo.html` | ローカルデモ用HTML（`?page=entry` で記事ページ表示） |
+| `build.sh` | 生成物を一括ビルドするスクリプト |
 
 ## セットアップ
 
-1. `hatena-blog-neovim-hatena.html` の内容をコピー
-2. はてなブログの管理画面 → デザイン → カスタマイズ → ヘッダ（タイトル下）に貼り付け
-3. 保存
+FOUC（スタイル適用前の一瞬の素の表示）を避けるため、**CSSは `<head>`、JSは本文の後**に配置します。
+
+1. `hatena-blog-neovim-head.html` の内容をコピーし、はてなブログの管理画面 → **設定 → 詳細設定 → 「headに要素を追加」** に貼り付け
+2. `hatena-blog-neovim.min.js` の内容をコピーし、**デザイン → カスタマイズ → 記事 → 「記事下」**（またはフッタ）に貼り付け
+3. 以前「記事上」「記事下」「ヘッダ」等に貼っていた旧CSS/JSがあれば削除
+4. 保存
 
 ## ビルド
 
-ソースファイル（`.css` / `.js`）を編集した後、以下のコマンドではてなブログ用ファイルを再生成:
+ソースファイル（`.css` / `.js`）を編集した後、`./build.sh` を実行すると生成物がすべて再生成されます:
 
 ```bash
-# minify
-npx terser hatena-blog-neovim.js -c -m --output /tmp/nv-min.js
-npx clean-css-cli hatena-blog-theme.css -o /tmp/nv-min.css
-
-# 結合
-{ echo '<style>'; \
-  echo '@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");'; \
-  cat /tmp/nv-min.css; \
-  echo '</style>'; \
-  echo '<script>'; \
-  cat /tmp/nv-min.js; \
-  echo '</script>'; \
-} > hatena-blog-neovim-hatena.html
+./build.sh
 ```
 
-> **注意**: はてなブログのカスタムHTML欄は約64KBの文字数制限があります。ソースファイルを編集する際はminify後のサイズに注意してください。
+> **注意**: はてなブログのカスタムHTML欄は約64KBの文字数制限があります。`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` はそれぞれ64KB以内に収めてください（`build.sh` が末尾にサイズを表示します）。
 
 ## ライセンス
 

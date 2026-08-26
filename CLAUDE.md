@@ -8,42 +8,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ビルド
 
-ソース (`hatena-blog-theme.css`, `hatena-blog-neovim.js`) を編集したら、必ず3つの成果物を再生成すること。本番のはてなブログはこれらを参照し、ソースは見ない。
+ソース (`hatena-blog-theme.css`, `hatena-blog-neovim.js`, `hatena-blog-neovim-boot.js`) を編集したら、必ず `./build.sh` で成果物を再生成すること。本番のはてなブログはこれらを参照し、ソースは見ない。
 
-成果物:
-- `hatena-blog-theme.min.css` — minify後のCSSを `<style>...</style>` で囲んだもの（はてなブログにそのまま貼り付け）
-- `hatena-blog-neovim.min.js` — minify後のJSを `<script>...</script>` で囲んだもの（同上）
-- `hatena-blog-neovim-hatena.html` — 上2つを連結した64KB制限対応版
+```bash
+./build.sh   # terser / clean-css-cli を npx で呼び、末尾に各成果物のサイズを表示
+```
+
+成果物と貼り付け先:
+- `hatena-blog-neovim-head.html` — **設定 → 詳細設定 → 「headに要素を追加」**。preconnect + 非同期フォント `<link>` + ブートJS(`<script>`) + minify済CSS(`<style>`、`@import` 無し)。CSSを `<head>` に置くことでFOUCを防ぐ
+- `hatena-blog-neovim.min.js` — **デザイン → カスタマイズ → 記事下(またはフッタ)**。minify後のJSを `<script>...</script>` で囲んだもの。`#box2`(サイドバー)より後ろに置くと、JSは DOMContentLoaded を待たずに即 init する
+- `hatena-blog-theme.min.css` — 旧構成用(CSSを本文側に貼る場合)。`@import` 入りで単体でフォントも読む
+- `hatena-blog-neovim-hatena.html` — 旧構成用。上2つの連結(64KB超なので通常は使わない)
+
+`hatena-blog-neovim-boot.js` は `<head>` で最初の描画前に走る極小スクリプト。Cookie から `nv_theme` / `nv_386` / `nv_1984` / `nv_wallpaper` を読んで `html` にクラスと `--nv-wallpaper` を付け、壁紙を preload する。`DEFAULT_WALLPAPER` は本体JSと同じ値を保つこと。
 
 **注意**: `.min.css` / `.min.js` は文法上は不正（CSS/JSファイル内にHTMLタグが混入）だが、はてなブログのカスタムHTML欄に貼り付ける都合でこの形にしている。
 
-```bash
-# minify (ソース → 一時ファイル)
-npx terser hatena-blog-neovim.js -c -m --output /tmp/nv-min.js
-npx clean-css-cli hatena-blog-theme.css -o /tmp/nv-min.css
-
-# .min.css をタグで囲む
-{ echo '<style>'; \
-  echo '@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");'; \
-  cat /tmp/nv-min.css; \
-  echo '</style>'; \
-} > hatena-blog-theme.min.css
-
-# .min.js をタグで囲む
-{ echo '<script>'; \
-  cat /tmp/nv-min.js; \
-  echo '</script>'; \
-} > hatena-blog-neovim.min.js
-
-# 結合HTML（タグ付き2ファイルを単純連結）
-cat hatena-blog-theme.min.css hatena-blog-neovim.min.js > hatena-blog-neovim-hatena.html
-```
-
-**重要なサイズ制約**: はてなブログのカスタムHTML欄は **約64KB** が上限。`hatena-blog-neovim-hatena.html` のサイズに常に注意する（`.min.css` / `.min.js` を別アップする運用なら個別に64KB以内）。`wc -c hatena-blog-neovim-hatena.html` で確認。
+**重要なサイズ制約**: はてなブログのカスタムHTML欄は **約64KB** が上限。`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` がそれぞれ64KB以内であることを常に確認する（`build.sh` の出力で確認）。
 
 ## ローカル開発
 
-`hatena-blog-demo.html` がローカル動作確認用。はてなブログのDOM構造（`#globalheader-container`, `#container-inner`, `#content-inner`, `.entry`, `#box2` 等）を忠実に再現してあるので、ブラウザで直接開けば本番に近い見た目で挙動確認できる。Demo は **ソースの `.css` を `<link>` で参照** しているので、CSS編集はリロードで反映される（JSは結合HTMLでは無く、demo HTML側で別途読み込み）。
+`hatena-blog-demo.html` がローカル動作確認用。はてなブログのDOM構造（`#globalheader-container`, `#container-inner`, `#content-inner`, `.entry`, `#box2` 等）を忠実に再現してあるので、ブラウザで直接開けば本番に近い見た目で挙動確認できる。Demo は **ソースの `.css` を `<link>` で、`hatena-blog-neovim-boot.js` と `hatena-blog-neovim.js` を `<script src>` で参照** しているので、編集はリロードで反映される（ブラウザキャッシュが効く場合は `?v=N` を付ける）。`?page=entry` を付けると記事ページ(1記事)レイアウトになる。
 
 テストは無し。動作確認はブラウザで行う。
 

@@ -2032,9 +2032,13 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  // Start as soon as the DOM we need exists: when this script is placed after the
+  // sidebar (記事下 / フッタ), #main-inner and #box2 are already parsed, so we
+  // don't have to wait for DOMContentLoaded (which also waits for Hatena's own scripts).
+  if (document.readyState !== 'loading' ||
+      (document.getElementById('main-inner') && document.getElementById('box2'))) {
     init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
   }
 })();
