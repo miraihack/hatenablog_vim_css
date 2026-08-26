@@ -68,7 +68,7 @@ Catppuccin/Moonlight パレットベースの2色切替。Cookie で保持。
 | `hatena-blog-neovim.js` | テーマJS（ソース） |
 | `hatena-blog-neovim-boot.js` | 初回描画前にテーマ/モードのクラスと壁紙を適用する極小ブートJS（ソース） |
 | `hatena-blog-neovim-head.html` | **`<head>` 用**: preconnect + 非同期フォント読込 + ブートJS + minify済CSS（生成物） |
-| `hatena-blog-neovim.min.js` | **記事下/フッタ用**: minify済JS（生成物） |
+| `hatena-blog-neovim.min.js` | **フッタ用**: minify済JS（生成物） |
 | `hatena-blog-theme.min.css` | 旧構成用: `@import` 入りの単体CSS（生成物） |
 | `hatena-blog-demo.html` | ローカルデモ用HTML（`?page=entry` で記事ページ表示） |
 | `build.sh` | 生成物を一括ビルドするスクリプト |
@@ -78,7 +78,7 @@ Catppuccin/Moonlight パレットベースの2色切替。Cookie で保持。
 FOUC（スタイル適用前の一瞬の素の表示）を避けるため、**CSSは `<head>`、JSは本文の後**に配置します。
 
 1. `hatena-blog-neovim-head.html` の内容をコピーし、はてなブログの管理画面 → **設定 → 詳細設定 → 「headに要素を追加」** に貼り付け
-2. `hatena-blog-neovim.min.js` の内容をコピーし、**デザイン → カスタマイズ → 記事 → 「記事下」**（またはフッタ）に貼り付け
+2. `hatena-blog-neovim.min.js` の内容をコピーし、**デザイン → カスタマイズ → 「フッタ」** に貼り付け（「記事上/記事下」は記事ページにしか出力されないため、トップ・カテゴリ・検索結果ページでJSが動かなくなる。必ずフッタに置く）
 3. 以前「記事上」「記事下」「ヘッダ」等に貼っていた旧CSS/JSがあれば削除
 4. 保存
 

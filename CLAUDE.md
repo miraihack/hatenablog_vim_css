@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 成果物と貼り付け先:
 - `hatena-blog-neovim-head.html` — **設定 → 詳細設定 → 「headに要素を追加」**。preconnect + 非同期フォント `<link>` + ブートJS(`<script>`) + minify済CSS(`<style>`、`@import` 無し)。CSSを `<head>` に置くことでFOUCを防ぐ
-- `hatena-blog-neovim.min.js` — **デザイン → カスタマイズ → 記事下(またはフッタ)**。minify後のJSを `<script>...</script>` で囲んだもの。`#box2`(サイドバー)より後ろに置くと、JSは DOMContentLoaded を待たずに即 init する
+- `hatena-blog-neovim.min.js` — **デザイン → カスタマイズ → フッタ**。minify後のJSを `<script>...</script>` で囲んだもの。フッタは全ページ種別(トップ/カテゴリ/検索/記事)で出力され、`#box2`(サイドバー)より後ろなので JS は DOMContentLoaded を待たずに即 init する。**「記事上/記事下」欄は記事ページ(`page-entry`)でしか出力されない**ので、そこに置くと一覧系ページでテーマが動かない
 - `hatena-blog-theme.min.css` — 旧構成用(CSSを本文側に貼る場合)。`@import` 入りで単体でフォントも読む
 
 `hatena-blog-neovim-boot.js` は `<head>` で最初の描画前に走る極小スクリプト。Cookie から `nv_theme` / `nv_386` / `nv_1984` / `nv_wallpaper` を読んで `html` にクラスと `--nv-wallpaper` を付け、壁紙を preload する。`DEFAULT_WALLPAPER` は本体JSと同じ値を保つこと。
