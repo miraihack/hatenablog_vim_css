@@ -70,7 +70,6 @@ Catppuccin/Moonlight パレットベースの2色切替。Cookie で保持。
 | `hatena-blog-neovim-head.html` | **`<head>` 用**: preconnect + 非同期フォント読込 + ブートJS + minify済CSS（生成物） |
 | `hatena-blog-neovim.min.js` | **記事下/フッタ用**: minify済JS（生成物） |
 | `hatena-blog-theme.min.css` | 旧構成用: `@import` 入りの単体CSS（生成物） |
-| `hatena-blog-neovim-hatena.html` | 旧構成用: CSS+JS結合ファイル（生成物・64KB超） |
 | `hatena-blog-demo.html` | ローカルデモ用HTML（`?page=entry` で記事ページ表示） |
 | `build.sh` | 生成物を一括ビルドするスクリプト |
 
@@ -91,7 +90,7 @@ FOUC（スタイル適用前の一瞬の素の表示）を避けるため、**CS
 ./build.sh
 ```
 
-> **注意**: はてなブログのカスタムHTML欄は約64KBの文字数制限があります。`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` はそれぞれ64KB以内に収めてください（`build.sh` が末尾にサイズを表示します）。
+> **注意**: はてなブログのカスタムHTML欄は**1設置箇所につき約64KB**の制限があります。`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` はそれぞれ別の箇所に貼るファイルで、各々64KB以内に収める必要があります（`build.sh` が超過時にエラーを出します）。
 
 ## ライセンス
 

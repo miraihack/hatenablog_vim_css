@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## リポジトリ概要
 
-はてなブログをNeovim風UIに変換するカスタムテーマ。ビルドツール・パッケージマネージャ・テストフレームワークなし、依存関係は `npx` で都度呼び出される minifier だけ。実体は CSS 1本 + JS 1本 + 結合済 HTML 1本。
+はてなブログをNeovim風UIに変換するカスタムテーマ。ビルドツール・パッケージマネージャ・テストフレームワークなし、依存関係は `npx` で都度呼び出される minifier だけ。実体は CSS 1本 + JS 1本(+ 極小ブートJS)。
 
 ## ビルド
 
@@ -18,13 +18,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `hatena-blog-neovim-head.html` — **設定 → 詳細設定 → 「headに要素を追加」**。preconnect + 非同期フォント `<link>` + ブートJS(`<script>`) + minify済CSS(`<style>`、`@import` 無し)。CSSを `<head>` に置くことでFOUCを防ぐ
 - `hatena-blog-neovim.min.js` — **デザイン → カスタマイズ → 記事下(またはフッタ)**。minify後のJSを `<script>...</script>` で囲んだもの。`#box2`(サイドバー)より後ろに置くと、JSは DOMContentLoaded を待たずに即 init する
 - `hatena-blog-theme.min.css` — 旧構成用(CSSを本文側に貼る場合)。`@import` 入りで単体でフォントも読む
-- `hatena-blog-neovim-hatena.html` — 旧構成用。上2つの連結(64KB超なので通常は使わない)
 
 `hatena-blog-neovim-boot.js` は `<head>` で最初の描画前に走る極小スクリプト。Cookie から `nv_theme` / `nv_386` / `nv_1984` / `nv_wallpaper` を読んで `html` にクラスと `--nv-wallpaper` を付け、壁紙を preload する。`DEFAULT_WALLPAPER` は本体JSと同じ値を保つこと。
 
 **注意**: `.min.css` / `.min.js` は文法上は不正（CSS/JSファイル内にHTMLタグが混入）だが、はてなブログのカスタムHTML欄に貼り付ける都合でこの形にしている。
 
-**重要なサイズ制約**: はてなブログのカスタムHTML欄は **約64KB** が上限。`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` がそれぞれ64KB以内であることを常に確認する（`build.sh` の出力で確認）。
+**重要なサイズ制約**: はてなブログのカスタムHTML欄は **1設置箇所につき約64KB(65,536 bytes)** が上限。生成物は1ファイル=1設置箇所なので、`hatena-blog-neovim-head.html` と `hatena-blog-neovim.min.js` は**それぞれ**64KB以内でなければならない。`build.sh` は超過時にエラー終了、60KB超で警告を出す。複数ファイルを結合して1箇所に貼るのは不可。
 
 ## ローカル開発
 
