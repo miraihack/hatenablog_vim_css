@@ -37,7 +37,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `hatena-blog-theme.css` — 全スタイル。CSS変数で `dark` / `light` の2テーマを切替。`html.nv-dark`, `html.nv-light`, `html.nv-mobile`, `html.nv-minimized`, `html.nv-386`, `html.nv-1984` のクラス組合せで分岐。
 - `hatena-blog-neovim.js` — 単一の IIFE。1000行強。`init()` が DOMContentLoaded で動き、はてなブログの既存DOMから情報を吸い上げて Vim 風UIを構築する。
-- `hatena-blog-neovim-hatena.html` — 上2つの結合・minify版（**ソースではない、生成物**）。
+- `hatena-blog-neovim-boot.js` — `<head>` で最初の描画前に走る極小ブートJS（テーマ/モードのクラス付与・壁紙適用）。
+- `hatena-blog-neovim-head.html` / `hatena-blog-neovim.min.js` — `build.sh` の生成物（**ソースではない**）。前者は head 用、後者は記事下用で、それぞれ64KB以内。
 
 ### ランタイム構造
 
