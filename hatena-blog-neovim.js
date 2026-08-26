@@ -495,20 +495,10 @@
   function appendReadMore(p, href) {
     p.appendChild(document.createTextNode('…'));
     var a = document.createElement('a');
-    a.className = 'nv-read-more';
+    a.className = 'entry-more';
     a.href = href;
     a.textContent = 'さらに読む';
     p.appendChild(a);
-  }
-
-  function makeMoreRead(href) {
-    var more = document.createElement('div');
-    more.className = 'nv-card-more';
-    var ma = document.createElement('a');
-    ma.href = href;
-    ma.textContent = 'More read';
-    more.appendChild(ma);
-    return more;
   }
 
   function buildEntryCards() {
@@ -528,8 +518,15 @@
         desc.textContent = cardExcerpt(desc.textContent).replace(/[…\s]+$/, '');
         appendReadMore(desc, href);
       }
-      entry.appendChild(makeMoreRead(href));
     });
+
+    // Category pages: "Category: <name>" heading, like geek.sc
+    if (document.body.classList.contains('page-archive-category')) {
+      var heading = document.querySelector('.archive-header-category .archive-heading');
+      if (heading && heading.textContent.indexOf('Category:') !== 0) {
+        heading.textContent = 'Category: ' + heading.textContent.trim();
+      }
+    }
 
     // Full-entry lists (e.g. blogs configured to show whole entries)
     var entries = document.querySelectorAll('.entry');
@@ -570,10 +567,6 @@
         ex.appendChild(p);
         content.parentNode.insertBefore(ex, content);
 
-        var footer = entry.querySelector('.entry-footer');
-        var more = makeMoreRead(href);
-        if (footer) footer.appendChild(more);
-        else entry.appendChild(more);
       });
     }
   }

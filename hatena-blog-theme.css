@@ -1295,7 +1295,7 @@ a:visited { color: var(--blue); }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 16px;
-  margin-bottom: 1.5em;
+  margin-bottom: 0.5em;
 }
 .nv-mobile .entry-grid { grid-template-columns: 1fr; }
 .entry-grid .entry-card {
@@ -1305,6 +1305,11 @@ a:visited { color: var(--blue); }
   padding: 0 0 0.8em;
   overflow: hidden;
 }
+.entry-grid .entry-card > .entry-thumb,
+.entry-grid .entry-card > .entry-thumb-link {
+  display: block;
+  margin-bottom: 0.7em;
+}
 .entry-grid .entry-card .entry-thumb {
   display: block;
   width: 100%;
@@ -1312,7 +1317,6 @@ a:visited { color: var(--blue); }
   background-size: cover;
   background-position: center;
 }
-.entry-grid .entry-card .entry-thumb-link { display: block; }
 .entry-grid .entry-card .entry-thumb img {
   width: 100%;
   height: 150px;
@@ -1328,8 +1332,7 @@ a:visited { color: var(--blue); }
 .entry-grid .entry-card .archive-entry-header,
 .entry-grid .entry-card .nv-card-content,
 .entry-grid .entry-card .archive-entry-body,
-.entry-grid .entry-card .entry-footer,
-.entry-grid .entry-card .nv-card-more {
+.entry-grid .entry-card .entry-footer {
   padding-left: 1em;
   padding-right: 1em;
   box-sizing: border-box;
@@ -1340,26 +1343,56 @@ a:visited { color: var(--blue); }
   padding-bottom: 0.6em;
   margin-bottom: 0.6em;
 }
-.entry-grid .entry-card .entry-title { font-size: 1.15em; line-height: 1.55; }
-.entry-grid .entry-card .date a { font-size: 0.85em; }
-.entry-grid .entry-card .categories a,
-.entry-grid .entry-card .archive-entry-tags a { font-size: 0.78em; }
+.entry-grid .entry-card .entry-title { font-size: 1.25em; line-height: 1.55; }
+.entry-grid .entry-card .date a { font-size: 0.9em; }
+.entry-grid .entry-card .categories a { font-size: 0.85em; }
 .entry-grid .entry-card .nv-card-content,
 .entry-grid .entry-card .archive-entry-body {
-  font-size: 0.95em;
+  font-size: 1em;
   line-height: 1.9;
   flex: 1 1 0;
 }
 .entry-grid .entry-card .entry-excerpt,
-.entry-grid .entry-card .entry-description { margin: 0; }
-.entry-card .nv-read-more { color: var(--blue); margin-left: 0.2em; }
-.entry-card .nv-read-more:hover { background-color: var(--selection); }
-.entry-grid .entry-card .entry-footer,
-.entry-grid .entry-card .nv-card-more { margin-top: 0.5em; font-size: 0.9em; }
-.nv-card-more a { color: var(--tab-inactive); font-size: 0.85em; }
-.nv-card-more a:hover { background-color: var(--selection); }
+.entry-grid .entry-card .entry-description { margin: 0 0 0.8em; }
+.entry-card .entry-more { color: var(--purple); white-space: nowrap; margin-left: 0.3em; }
+.entry-card .entry-more:hover { background-color: var(--selection); }
+.entry-grid .entry-card .entry-footer { margin-top: 0.5em; font-size: 0.9em; }
 .entry-grid .entry-card .social-buttons { display: none; }
 .archive-entry .archive-entry-tags-wrapper { display: none !important; }
+
+/* --- List page headings (category / search), styled like an entry title --- */
+.archive-header-category,
+.search-result { margin: 0 0 1em; }
+.archive-heading {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--blue);
+  margin: 0 0 0.4em;
+}
+.archive-entries-sort { font-size: 0.85em; margin: 0 0 1.2em; color: var(--tab-inactive); }
+.archive-entries-sort a { color: var(--blue); }
+.archive-entries-sort-separator::before { content: "|"; margin: 0 0.5em; }
+.search-result-form { display: flex; gap: 8px; margin-top: 0.4em; }
+.search-result-input {
+  flex: 1;
+  max-width: 420px;
+  padding: 4px 10px;
+  border: 1px solid var(--table-border);
+  border-radius: 6px;
+  background-color: var(--bg-solid);
+  color: var(--font-color);
+  font-family: 'JetBrains Mono', monospace;
+}
+.search-result-button {
+  padding: 4px 14px;
+  border: 1px solid var(--table-border);
+  border-radius: 6px;
+  background-color: var(--bg-solid);
+  color: var(--blue);
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+}
+.search-result-button:hover { border-color: var(--blue); background-color: var(--selection); }
 
 /* --- Header date + category chips (same as geek.sc) --- */
 .entry-header .date a,
