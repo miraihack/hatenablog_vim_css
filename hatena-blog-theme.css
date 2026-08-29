@@ -11,7 +11,7 @@
   --nv-wallpaper: url('https://cdn-ak.f.st-hatena.com/images/fotolife/n/netcraft3/20260509/20260509014811_original.jpg');
 }
 :root, .nv-dark {
-  --bg-color: rgba(32, 32, 42, 0.95);
+  --bg-color: #20202a; /* window is fully opaque (no transparency) */
   --bg-solid: #20202a;
   --font-color: #cdd6f4;
   --blue: #82aaff;
@@ -34,7 +34,7 @@
 
 /* --- CSS Variables: Light Mode --- */
 .nv-light {
-  --bg-color: rgba(245, 245, 250, 0.95);
+  --bg-color: #f5f5fa;
   --bg-solid: #f0f0f5;
   --font-color: #1e1e2e;
   --blue: #2563eb;
@@ -685,8 +685,6 @@ a:visited { color: var(--blue); }
   border-radius: 12px;
   overflow: hidden;
   background-color: var(--bg-color);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   display: flex !important;
   flex-direction: column !important;
   box-sizing: border-box !important;
@@ -2053,8 +2051,6 @@ a.nv-selected, .nv-selected { background-color: var(--selection) !important; }
 .nv-386 #container-inner {
   border-radius: 0 !important;
   box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 .nv-386 #nv-topbar { border-radius: 0 !important; }
 .nv-386 .nv-prompt { border-radius: 0 !important; }
