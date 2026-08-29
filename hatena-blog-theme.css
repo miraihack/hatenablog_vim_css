@@ -81,7 +81,7 @@ html, body {
   padding: 0 !important;
   background: var(--nv-wallpaper) center/cover no-repeat fixed !important;
   color: var(--font-color);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "Noto Sans JP", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
   font-size: 14px;
   line-height: 1.7;
   overflow: hidden !important;
@@ -304,6 +304,7 @@ html, body {
 
 /* --- AI chat (opens from AI icon) --- */
 #nv-aichat {
+  font-family: 'JetBrains Mono', monospace;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -698,6 +699,7 @@ a:visited { color: var(--blue); }
 
 /* --- Blog Header + Tab Bar: Fixed, aligned to container --- */
 #nv-topbar {
+  font-family: 'JetBrains Mono', monospace;
   position: fixed !important;
   top: 3vh;
   left: 3vw;
@@ -994,6 +996,7 @@ a:visited { color: var(--blue); }
    JS-injected: File Browser (#nv-files)
    ============================================ */
 #nv-files {
+  font-family: 'JetBrains Mono', monospace;
   width: 20%;
   min-width: 200px;
   max-width: 300px;
@@ -1201,6 +1204,7 @@ a:visited { color: var(--blue); }
 
 /* --- Code Blocks (always dark: vim "hybrid" palette, both themes) --- */
 .entry-content pre {
+  font-family: 'JetBrains Mono', monospace;
   background-color: #1d1f21 !important;
   color: #c5c8c6;
   padding: 10px; border-radius: 4px; overflow-x: auto;
@@ -1225,6 +1229,7 @@ a:visited { color: var(--blue); }
 
 /* Enhanced code block frame built by JS (enhanceCodeBlocks) */
 .nv-code {
+  font-family: 'JetBrains Mono', monospace;
   margin: 1.2em 0;
   border: 1px solid #373b41;
   border-radius: 8px;
@@ -1419,6 +1424,7 @@ a:visited { color: var(--blue); }
 
 /* --- Vim statusline article header (entry pages) --- */
 .nv-statusline {
+  font-family: 'JetBrains Mono', monospace;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -1453,6 +1459,7 @@ a:visited { color: var(--blue); }
 
 /* --- Telescope-style TOC (entry pages) --- */
 .nv-toc {
+  font-family: 'JetBrains Mono', monospace;
   border: 1px solid var(--table-border);
   border-radius: 8px;
   background-color: var(--bg-solid);
@@ -1499,7 +1506,7 @@ a:visited { color: var(--blue); }
 .nv-toc-h3::before { left: 2.4em; }
 
 /* --- EOF tildes (entry pages) --- */
-.nv-eof { margin-top: 2.5em; user-select: none; }
+.nv-eof { margin-top: 2.5em; user-select: none; font-family: 'JetBrains Mono', monospace; }
 .nv-eof span {
   display: block;
   color: var(--blue);
@@ -1655,6 +1662,7 @@ a:visited { color: var(--blue); }
    JS-injected: Prompt Bar (fixed, aligned to container)
    ============================================ */
 .nv-prompt {
+  font-family: 'JetBrains Mono', monospace;
   position: fixed !important;
   bottom: 3vh;
   left: 3vw;
