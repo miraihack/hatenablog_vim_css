@@ -802,6 +802,12 @@
   }
 
   // ─── Keyboard ───
+  // The page itself never scrolls (body is overflow:hidden); #main-inner is the viewer's scroll box.
+  var SCROLL_LINE = 60;
+  function mainScroller() { return document.getElementById('main-inner') || document.documentElement; }
+  function scrollMain(dy, dx) { var sc = mainScroller(); sc.scrollTop += dy || 0; sc.scrollLeft += dx || 0; }
+  function scrollMainTo(y) { var sc = mainScroller(); sc.scrollTop = y; }
+
   function execKey(event) {
     var ae = document.activeElement;
     var key = event.key.toLowerCase();
@@ -816,6 +822,14 @@
       return;
     }
 
+    if (event.ctrlKey && !isFiles && (key === 'd' || key === 'u')) {
+      event.preventDefault();
+      var half = Math.floor(mainScroller().clientHeight / 2);
+      scrollMain(key === 'd' ? half : -half);
+      return;
+    }
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+
     if (key !== 'r' && ['j','k','h','l','tab','enter','escape','/','i'].indexOf(key) !== -1) event.preventDefault();
 
     if (event.shiftKey) {
@@ -824,6 +838,7 @@
         case 'h': var f = document.getElementById(FILES_ID); if (f) f.focus({ preventScroll: true }); focused = 'files'; NvCookie.set('nv_focused', 'files'); break;
         case 't': newTab(isFiles ? document.getElementById(FILES_ID) : document.getElementById('main'), false); break;
         case 'q': delTab(window.location.href); break;
+        case 'g': if (!isFiles) scrollMainTo(1e9); break;
       }
       return;
     }
@@ -839,18 +854,12 @@
         break;
       case 'enter': newTab(isFiles ? document.getElementById(FILES_ID) : document.getElementById('main'), true); break;
       case 'tab': nextTab(); break;
-      case 'j':
-        if (isFiles) { nextFile(-1, document.getElementById(FILES_ID)); }
-        else { var m = document.getElementById('main'); var cl = m ? m.querySelectorAll('.nv-content-link') : []; cl.length > 0 ? nextFile(-1, m) : window.scrollBy(0, 60); }
-        break;
-      case 'k':
-        if (isFiles) { nextFile(1, document.getElementById(FILES_ID)); }
-        else { var m2 = document.getElementById('main'); var cl2 = m2 ? m2.querySelectorAll('.nv-content-link') : []; cl2.length > 0 ? nextFile(1, m2) : window.scrollBy(0, -60); }
-        break;
-      case 'l': window.scrollBy(60, 0); break;
-      case 'h': window.scrollBy(-60, 0); break;
+      case 'j': isFiles ? nextFile(-1, document.getElementById(FILES_ID)) : scrollMain(SCROLL_LINE); break;
+      case 'k': isFiles ? nextFile(1, document.getElementById(FILES_ID)) : scrollMain(-SCROLL_LINE); break;
+      case 'l': scrollMain(0, SCROLL_LINE); break;
+      case 'h': scrollMain(0, -SCROLL_LINE); break;
       case 'g':
-        if (window._nvLastG && Date.now() - window._nvLastG < 400) { window.scrollTo(0, 0); window._nvLastG = 0; }
+        if (window._nvLastG && Date.now() - window._nvLastG < 400) { scrollMainTo(0); window._nvLastG = 0; }
         else { window._nvLastG = Date.now(); }
         break;
     }
@@ -882,7 +891,7 @@
     var cmd = parts[0]; parts.shift();
     var args = parts.join('').replace(/ /g, '').split('=');
     switch (cmd) {
-      case 'help': setter.value = JSON.stringify({ type: 'success', message: 'j/k=nav Shift+H/L=focus i=insert /=search :q=back' }); writePrompt(setter); break;
+      case 'help': setter.value = JSON.stringify({ type: 'success', message: 'j/k=scroll gg/G=top/bottom C-d/C-u=half page Shift+H/L=focus i=insert /=search :q=back' }); writePrompt(setter); break;
       case 'q': window.history.back(); break;
       case 'q!': window.close(); break;
       case 'set': var r = execSet(args); setter.value = JSON.stringify(r); writePrompt(setter); break;
